@@ -5,6 +5,7 @@ import { Marquee } from "@/components/sections/Marquee";
 import { Products } from "@/components/sections/Products";
 import { About } from "@/components/sections/About";
 import { Newsletter } from "@/components/sections/Newsletter";
+import { Contact } from "@/components/sections/Contact";
 
 export default function Home() {
   return (
@@ -16,6 +17,7 @@ export default function Home() {
         <Products />
         <About />
         <Newsletter />
+        <Contact />
       </main>
       <Footer />
     </>

@@ -3,7 +3,12 @@
 import { motion } from "framer-motion";
 import { ShoppingCart } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+} from "@/components/ui/card";
 
 // Mock data for up to 8 products as requested
 const products = [
@@ -12,7 +17,7 @@ const products = [
     name: "Original Beef Jerky",
     price: "$7.99",
     weight: "2 oz",
-    image: "/images/product-placeholder.png",
+    image: "/images/img1.jpeg",
     tag: "Best Seller",
   },
   {
@@ -20,28 +25,28 @@ const products = [
     name: "Spicy Jalapeño",
     price: "$7.99",
     weight: "2 oz",
-    image: "/images/product-placeholder.png",
+    image: "/images/img2.jpeg",
   },
   {
     id: 3,
     name: "Teriyaki Blast",
     price: "$7.99",
     weight: "2 oz",
-    image: "/images/product-placeholder.png",
+    image: "/images/img3.jpeg",
   },
   {
     id: 4,
     name: "Black Pepper",
     price: "$7.99",
     weight: "2 oz",
-    image: "/images/product-placeholder.png",
+    image: "/images/img4.jpeg",
   },
   {
     id: 5,
     name: "Habanero Heat",
     price: "$8.99",
     weight: "2 oz",
-    image: "/images/product-placeholder.png",
+    image: "/images/img5.jpeg",
     tag: "New",
   },
   {
@@ -49,21 +54,21 @@ const products = [
     name: "Sweet & Spicy",
     price: "$7.99",
     weight: "2 oz",
-    image: "/images/product-placeholder.png",
+    image: "/images/img6.jpeg",
   },
   {
     id: 7,
     name: "Garlic Lover's",
     price: "$7.99",
     weight: "2 oz",
-    image: "/images/product-placeholder.png",
+    image: "/images/img7.jpeg",
   },
   {
     id: 8,
     name: "Variety Pack (8-Count)",
     price: "$49.99",
     weight: "16 oz",
-    image: "/images/product-placeholder.png",
+    image: "/images/img8.jpeg",
     tag: "Save 20%",
   },
 ];
@@ -85,10 +90,13 @@ const itemVariants = {
 
 export function Products() {
   return (
-    <section id="products" className="py-20 md:py-32 bg-zinc-50 dark:bg-zinc-950">
+    <section
+      id="products"
+      className="py-20 md:py-32 bg-zinc-50 dark:bg-zinc-950"
+    >
       <div className="container mx-auto px-4 md:px-6">
         <div className="text-center mb-16">
-          <motion.h2 
+          <motion.h2
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -96,7 +104,7 @@ export function Products() {
           >
             Shop the <span className="text-primary">Stash</span>
           </motion.h2>
-          <motion.p 
+          <motion.p
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -125,7 +133,7 @@ export function Products() {
                     </div>
                   )}
                   {/* Image Placeholder - User can replace with Next/Image later */}
-                  <div 
+                  <div
                     className="w-full h-full bg-cover bg-center group-hover:scale-105 transition-transform duration-500"
                     style={{ backgroundImage: `url(${product.image})` }}
                   >
@@ -135,7 +143,9 @@ export function Products() {
                   </div>
                 </CardHeader>
                 <CardContent className="flex-grow p-6 text-center">
-                  <p className="text-sm text-muted-foreground font-bold mb-2 uppercase tracking-wider">{product.weight}</p>
+                  <p className="text-sm text-muted-foreground font-bold mb-2 uppercase tracking-wider">
+                    {product.weight}
+                  </p>
                   <h3 className="font-heading text-xl font-bold uppercase leading-tight mb-2 group-hover:text-primary transition-colors">
                     {product.name}
                   </h3>
