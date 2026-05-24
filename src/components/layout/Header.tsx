@@ -10,7 +10,6 @@ import {
   SheetTrigger,
   SheetTitle,
 } from "@/components/ui/sheet";
-import { motion, useScroll, useMotionValueEvent } from "framer-motion";
 import Image from "next/image";
 
 const navLinks = [
@@ -21,23 +20,19 @@ const navLinks = [
 ];
 
 export function Header() {
-  const { scrollY } = useScroll();
   const [isScrolled, setIsScrolled] = useState(false);
 
-  useMotionValueEvent(scrollY, "change", (latest) => {
-    if (latest > 50) {
-      setIsScrolled(true);
-    } else {
-      setIsScrolled(false);
-    }
-  });
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 50);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   return (
-    <motion.header
-      initial={{ y: -100 }}
-      animate={{ y: 0 }}
-      transition={{ duration: 0.5 }}
-      className={`fixed top-0 left-0 right-0 z-50 transition-colors duration-300 ${
+    <header
+      className={`fixed top-0 left-0 right-0 z-50 ${
         isScrolled
           ? "bg-background/95 backdrop-blur-md shadow-sm border-b"
           : "bg-transparent"
@@ -61,7 +56,7 @@ export function Header() {
                 <Link
                   key={link.name}
                   href={link.href}
-                  className="text-2xl font-heading hover:text-primary transition-colors"
+                  className="text-2xl font-heading hover:text-primary"
                 >
                   {link.name}
                 </Link>
@@ -90,7 +85,7 @@ export function Header() {
             <Link
               key={link.name}
               href={link.href}
-              className="text-sm font-bold uppercase tracking-wider hover:text-primary transition-colors"
+              className="text-sm font-bold uppercase tracking-wider hover:text-primary"
             >
               {link.name}
             </Link>
@@ -115,6 +110,6 @@ export function Header() {
           </Button>
         </div>
       </div>
-    </motion.header>
+    </header>
   );
 }

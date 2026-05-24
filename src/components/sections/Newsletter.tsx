@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { motion } from "framer-motion";
 import { Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -29,12 +28,7 @@ export function Newsletter() {
       <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary to-transparent" />
       
       <div className="container relative z-10 mx-auto px-4 md:px-6 max-w-4xl text-center">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-        >
+        <div>
           <h2 className="font-heading text-4xl md:text-5xl lg:text-6xl font-bold uppercase mb-4">
             Join The <span className="text-primary">Bold</span>
           </h2>
@@ -74,7 +68,7 @@ export function Newsletter() {
           <p className="text-xs text-zinc-600 mt-4 uppercase tracking-widest">
             We don't spam. Unsubscribe anytime.
           </p>
-        </motion.div>
+        </div>
       </div>
     </section>
   );

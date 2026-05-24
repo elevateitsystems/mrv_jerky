@@ -1,5 +1,4 @@
 @import "tailwindcss";
-@import "tw-animate-css";
 @import "shadcn/tailwind.css";
 
 @custom-variant dark (&:is(.dark *));
@@ -108,16 +107,4 @@
 }
 
 @layer utilities {
-  .animate-marquee {
-    animation: marquee 25s linear infinite;
-  }
-  
-  @keyframes marquee {
-    0% {
-      transform: translateX(0%);
-    }
-    100% {
-      transform: translateX(-50%);
-    }
-  }
 }

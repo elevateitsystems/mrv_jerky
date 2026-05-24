@@ -17,13 +17,13 @@ export function Footer() {
               zero compromise. Taste the difference today.
             </p>
             <div className="flex gap-4">
-              <Link href="#" className="hover:text-primary transition-colors text-sm font-bold uppercase tracking-wider">
+              <Link href="#" className="hover:text-primary text-sm font-bold uppercase tracking-wider">
                 Instagram
               </Link>
-              <Link href="#" className="hover:text-primary transition-colors text-sm font-bold uppercase tracking-wider">
+              <Link href="#" className="hover:text-primary text-sm font-bold uppercase tracking-wider">
                 Facebook
               </Link>
-              <Link href="#" className="hover:text-primary transition-colors text-sm font-bold uppercase tracking-wider">
+              <Link href="#" className="hover:text-primary text-sm font-bold uppercase tracking-wider">
                 Twitter
               </Link>
             </div>
@@ -34,22 +34,22 @@ export function Footer() {
             <h3 className="font-heading text-white text-lg font-bold mb-4 uppercase">Shop</h3>
             <ul className="flex flex-col gap-2">
               <li>
-                <Link href="#products" className="hover:text-primary transition-colors">
+                 <Link href="#products" className="hover:text-primary">
                   All Products
                 </Link>
               </li>
               <li>
-                <Link href="#" className="hover:text-primary transition-colors">
+                <Link href="#" className="hover:text-primary">
                   Best Sellers
                 </Link>
               </li>
               <li>
-                <Link href="#" className="hover:text-primary transition-colors">
+                <Link href="#" className="hover:text-primary">
                   Variety Packs
                 </Link>
               </li>
               <li>
-                <Link href="#" className="hover:text-primary transition-colors">
+                <Link href="#" className="hover:text-primary">
                   Subscribe & Save
                 </Link>
               </li>
@@ -61,22 +61,22 @@ export function Footer() {
             <h3 className="font-heading text-white text-lg font-bold mb-4 uppercase">Support</h3>
             <ul className="flex flex-col gap-2">
               <li>
-                <Link href="#contact" className="hover:text-primary transition-colors">
+                <Link href="#contact" className="hover:text-primary">
                   Contact Us
                 </Link>
               </li>
               <li>
-                <Link href="#" className="hover:text-primary transition-colors">
+                <Link href="#" className="hover:text-primary">
                   FAQ
                 </Link>
               </li>
               <li>
-                <Link href="#" className="hover:text-primary transition-colors">
+                <Link href="#" className="hover:text-primary">
                   Shipping & Returns
                 </Link>
               </li>
               <li>
-                <Link href="#" className="hover:text-primary transition-colors">
+                <Link href="#" className="hover:text-primary">
                   Privacy Policy
                 </Link>
               </li>

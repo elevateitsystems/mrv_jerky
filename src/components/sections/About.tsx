@@ -1,6 +1,5 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
@@ -21,11 +20,7 @@ export function About() {
       <div className="container mx-auto px-4 md:px-6">
         <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
           {/* Image Side */}
-          <motion.div
-            initial={{ opacity: 0, x: -50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.7 }}
+          <div
             className="w-full lg:w-1/2 relative"
           >
             <div className="relative aspect-square max-w-lg mx-auto">
@@ -57,14 +52,10 @@ export function About() {
                 </span>
               </div>
             </div>
-          </motion.div>
+          </div>
 
           {/* Text Side */}
-          <motion.div
-            initial={{ opacity: 0, x: 50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.7, delay: 0.2 }}
+          <div
             className="w-full lg:w-1/2"
           >
             <h2 className="font-heading text-4xl md:text-5xl font-bold uppercase mb-6">
@@ -100,7 +91,7 @@ export function About() {
             >
               Read Our Story
             </Button>
-          </motion.div>
+          </div>
         </div>
       </div>
     </section>

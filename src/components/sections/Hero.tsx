@@ -1,6 +1,5 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 
 export function Hero() {
@@ -16,48 +15,35 @@ export function Hero() {
       </div>
 
       <div className="container relative z-10 mx-auto px-4 text-center flex flex-col items-center">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.2 }}
-        >
+        <div>
           <span className="inline-block py-1 px-3 rounded-full bg-primary/20 text-primary border border-primary/30 text-sm font-bold tracking-wider uppercase mb-6">
             100% Premium Grass-Fed Beef
           </span>
-        </motion.div>
+        </div>
 
-        <motion.h1
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.4 }}
+        <h1
           className="font-heading text-5xl md:text-7xl lg:text-8xl font-bold tracking-tighter uppercase text-white mb-6 drop-shadow-lg"
         >
           Fuel Your <span className="text-primary">Bold</span>
-        </motion.h1>
+        </h1>
 
-        <motion.p
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.6 }}
+        <p
           className="text-lg md:text-xl text-zinc-300 max-w-2xl mb-10 drop-shadow-md"
         >
           High protein, zero sugar, and crafted with mouth-watering flavors. 
           The ultimate snack for those who demand more from their jerky.
-        </motion.p>
+        </p>
 
-        <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.5, delay: 0.8 }}
+        <div
           className="flex flex-col sm:flex-row gap-4"
         >
-          <Button size="lg" className="font-bold uppercase tracking-wider text-md px-8 py-6 rounded-none shadow-[0_0_20px_rgba(220,38,38,0.4)] hover:shadow-[0_0_30px_rgba(220,38,38,0.6)] transition-shadow">
+          <Button size="lg" className="font-bold uppercase tracking-wider text-md px-8 py-6 rounded-none shadow-[0_0_20px_rgba(220,38,38,0.4)] hover:shadow-[0_0_30px_rgba(220,38,38,0.6)]">
             Shop Best Sellers
           </Button>
           <Button size="lg" variant="outline" className="font-bold uppercase tracking-wider text-md px-8 py-6 rounded-none text-white border-white hover:bg-white hover:text-black">
             Explore Flavors
           </Button>
-        </motion.div>
+        </div>
       </div>
     </section>
   );

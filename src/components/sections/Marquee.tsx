@@ -17,7 +17,7 @@ const marqueeItems = [...benefits, ...benefits, ...benefits, ...benefits];
 export function Marquee() {
   return (
     <div className="w-full bg-primary text-primary-foreground py-4 overflow-hidden flex items-center border-y-4 border-black">
-      <div className="flex w-max animate-marquee items-center gap-12">
+      <div className="flex w-max items-center gap-12">
         {marqueeItems.map((benefit, index) => (
           <div key={index} className="flex items-center gap-3">
             <span className="font-heading text-xl md:text-2xl font-bold tracking-wider whitespace-nowrap">
