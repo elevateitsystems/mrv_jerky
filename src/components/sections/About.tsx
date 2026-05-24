@@ -15,35 +15,30 @@ export function About() {
   return (
     <section
       id="about"
-      className="py-20 md:py-32 overflow-hidden bg-white dark:bg-zinc-900 border-t border-b border-border"
+      className="overflow-hidden border-y border-primary/20 bg-black py-20 text-white md:py-28"
     >
       <div className="container mx-auto px-4 md:px-6">
         <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
-          {/* Image Side */}
           <div
             className="w-full lg:w-1/2 relative"
           >
             <div className="relative aspect-square max-w-lg mx-auto">
-              <div className="absolute inset-0 bg-primary/10 -translate-x-4 translate-y-4 rounded-xl" />
+              <div className="absolute inset-0 -translate-x-4 translate-y-4 rounded-lg border border-primary/30 bg-primary/15" />
 
               <div
-                className="absolute inset-0 bg-zinc-200 dark:bg-zinc-800 rounded-xl bg-cover bg-center shadow-2xl flex items-center justify-center border border-border"
-                style={{
-                  backgroundImage: "url('/images/about-placeholder.png')",
-                }}
+                className="absolute inset-0 overflow-hidden rounded-lg border border-white/10 bg-zinc-900 shadow-2xl"
               >
-                Brand / Process Image
-                {/* <Image
+                <Image
                   src="/images/about-placeholder.png"
-                  alt="Brand / Process Image"
-                  width={400}
-                  height={400}
-                  className="sr-only h-60 w-60"
-                /> */}
+                  alt="MRV beef jerky ingredients and process"
+                  fill
+                  className="object-cover"
+                  sizes="(min-width: 1024px) 50vw, 100vw"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
               </div>
 
-              {/* Badge Overlay (এটা এখানেই থাকবে) */}
-              <div className="absolute -bottom-6 -right-6 bg-primary text-primary-foreground h-32 w-32 rounded-full flex flex-col items-center justify-center shadow-lg border-4 border-background rotate-12">
+              <div className="absolute -bottom-5 -right-3 flex h-28 w-28 rotate-12 flex-col items-center justify-center rounded-full border-4 border-black bg-primary text-primary-foreground shadow-lg md:-right-6 md:h-32 md:w-32">
                 <span className="font-heading text-3xl font-bold uppercase leading-none">
                   100%
                 </span>
@@ -54,40 +49,40 @@ export function About() {
             </div>
           </div>
 
-          {/* Text Side */}
           <div
             className="w-full lg:w-1/2"
           >
+            <p className="mb-3 font-heading text-sm font-bold uppercase tracking-[0.28em] text-primary">
+              Our Story
+            </p>
             <h2 className="font-heading text-4xl md:text-5xl font-bold uppercase mb-6">
-              Never Settle For <span className="text-primary">Average</span>
+              Real Ingredients. <span className="text-primary">Bold Flavor.</span>
             </h2>
 
-            <p className="text-lg text-muted-foreground mb-6">
-              MRVJerky was born from a simple idea: beef jerky shouldn't taste
-              like cardboard. We were tired of mass-produced, sugar-filled
-              snacks masquerading as protein. So we decided to make it
-              ourselves.
+            <p className="text-lg text-zinc-300 mb-6">
+              Middle River Valley jerky is built around honest cuts, deep
+              marinades, and the kind of smoke-forward flavor that feels right
+              at home in mountain country.
             </p>
 
-            <p className="text-lg text-muted-foreground mb-8">
-              Every bag is packed with thick, tender cuts of 100% premium beef,
-              marinated to perfection, and slow-smoked for that bold flavor you
-              crave. Fuel your next adventure with a snack that works as hard as
-              you do.
+            <p className="text-lg text-zinc-300 mb-8">
+              Every bag is crafted in small batches with premium beef, no
+              fillers, and a patient process that keeps the texture tender and
+              the flavor clean.
             </p>
 
             <ul className="space-y-4 mb-8">
               {features.map((feature, index) => (
                 <li key={index} className="flex items-center gap-3">
                   <CheckCircle2 className="h-6 w-6 text-primary flex-shrink-0" />
-                  <span className="font-bold text-lg">{feature}</span>
+                  <span className="font-bold text-lg text-white">{feature}</span>
                 </li>
               ))}
             </ul>
 
             <Button
               size="lg"
-              className="font-bold uppercase tracking-wider rounded-none px-8"
+              className="h-12 rounded-[4px] px-8 font-heading font-bold uppercase tracking-wider"
             >
               Read Our Story
             </Button>
