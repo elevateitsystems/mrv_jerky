@@ -1,6 +1,5 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { ShoppingCart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -73,93 +72,66 @@ const products = [
   },
 ];
 
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.1,
-    },
-  },
-};
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 30 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
-};
-
 export function Products() {
   return (
     <section
       id="products"
-      className="py-20 md:py-32 bg-zinc-50 dark:bg-zinc-950"
+      className="bg-[linear-gradient(180deg,#09070c_0%,#120f16_52%,#09070c_100%)] py-20 text-white md:py-28"
     >
       <div className="container mx-auto px-4 md:px-6">
-        <div className="text-center mb-16">
-          <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="font-heading text-4xl md:text-5xl font-bold uppercase mb-4"
+          <div
+            className="text-center mb-16"
           >
-            Shop the <span className="text-primary">Stash</span>
-          </motion.h2>
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.2 }}
-            className="text-muted-foreground text-lg max-w-2xl mx-auto"
+            <p className="mb-3 font-heading text-sm font-bold uppercase tracking-[0.28em] text-primary">
+              Small Batch Jerky
+            </p>
+            <h2
+              className="font-heading text-4xl md:text-5xl font-bold uppercase mb-4"
+            >
+              Shop The <span className="text-primary">Bold Flavor</span>
+            </h2>
+            <p
+              className="text-zinc-300 text-lg max-w-2xl mx-auto"
+            >
+              Premium cuts, rugged smoke, and valley-made flavor in every bag.
+            </p>
+          </div>
+          <div
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8"
           >
-            Premium cuts, bold flavors. Find your new favorite obsession.
-          </motion.p>
-        </div>
-
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-100px" }}
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8"
-        >
-          {products.map((product) => (
-            <motion.div key={product.id} variants={itemVariants}>
-              <Card className="h-full flex flex-col overflow-hidden border-2 border-transparent hover:border-primary transition-colors group cursor-pointer shadow-md hover:shadow-xl rounded-xl">
-                <CardHeader className="p-0 relative bg-zinc-200 dark:bg-zinc-900 h-64 flex items-center justify-center">
+            {products.map((product) => (
+              <div key={product.id} className="h-full flex flex-col">
+              <Card className="h-full flex flex-col overflow-hidden rounded-lg border border-white/10 bg-[#070609] p-0 text-white shadow-[0_18px_45px_rgba(0,0,0,0.28)] transition-colors hover:border-primary/80 group cursor-pointer">
+                <CardHeader className="p-0 relative h-64 shrink-0 overflow-hidden bg-[#070609]">
                   {/* Tag */}
                   {product.tag && (
-                    <div className="absolute top-4 left-4 bg-primary text-primary-foreground text-xs font-bold uppercase px-2 py-1 rounded shadow-sm z-10">
+                    <div className="absolute top-4 left-4 bg-primary text-primary-foreground text-xs font-bold uppercase px-2 py-1 rounded-[4px] shadow-sm z-10">
                       {product.tag}
                     </div>
                   )}
-                  {/* Image Placeholder - User can replace with Next/Image later */}
                   <div
-                    className="w-full h-full bg-cover bg-center group-hover:scale-105 transition-transform duration-500"
+                    className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105"
                     style={{ backgroundImage: `url(${product.image})` }}
-                  >
-                    <div className="w-full h-full flex items-center justify-center text-zinc-400 font-bold bg-black/5">
-                      Product Image
-                    </div>
-                  </div>
+                  />
                 </CardHeader>
-                <CardContent className="flex-grow p-6 text-center">
-                  <p className="text-sm text-muted-foreground font-bold mb-2 uppercase tracking-wider">
+                <CardContent className="flex-grow bg-[#070609] p-6 text-center">
+                  <p className="text-sm text-primary font-bold mb-2 uppercase tracking-wider">
                     {product.weight}
                   </p>
-                  <h3 className="font-heading text-xl font-bold uppercase leading-tight mb-2 group-hover:text-primary transition-colors">
+                  <h3 className="font-heading text-xl font-bold uppercase leading-tight mb-2 group-hover:text-primary">
                     {product.name}
                   </h3>
                   <p className="text-lg font-bold">{product.price}</p>
                 </CardContent>
-                <CardFooter className="p-6 pt-0">
-                  <Button className="w-full font-bold uppercase tracking-wider rounded-none group-hover:bg-primary/90 transition-colors">
+                <CardFooter className="border-t-0 bg-[#070609] p-6 pt-0">
+                  <Button className="h-12 w-full rounded-[4px] font-heading font-bold uppercase tracking-wider group-hover:bg-primary/90">
                     <ShoppingCart className="mr-2 h-4 w-4" /> Add to Cart
                   </Button>
                 </CardFooter>
               </Card>
-            </motion.div>
-          ))}
-        </motion.div>
+              </div>
+            ))}
+          </div>
       </div>
     </section>
   );

@@ -1,6 +1,5 @@
 "use client";
 
-import { motion } from "framer-motion";
 import Image from "next/image";
 
 import { Button } from "@/components/ui/button";
@@ -19,57 +18,42 @@ export function Contact() {
   return (
     <section
       id="contact"
-      className="py-20 md:py-32 bg-white dark:bg-zinc-900 border-t border-border"
+      className="border-t border-primary/20 bg-[linear-gradient(180deg,#09070c,#141018)] py-20 text-white md:py-28"
     >
       <div className="container mx-auto px-4 md:px-6">
-        {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-14"
-        >
-          <h2 className="font-heading text-4xl md:text-5xl font-bold uppercase mb-4">
-            Get in <span className="text-primary">Touch</span>
-          </h2>
-          <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-            Have questions about our jerky or want to collaborate? Send us a
-            message and we’ll reply soon.
+        <div className="text-center mb-14">
+          <p className="mb-3 font-heading text-sm font-bold uppercase tracking-[0.28em] text-primary">
+            Contact
           </p>
-        </motion.div>
+          <h2 className="font-heading text-4xl md:text-5xl font-bold uppercase mb-4">
+            Get In <span className="text-primary">Touch</span>
+          </h2>
+          <p className="text-zinc-300 text-lg max-w-2xl mx-auto">
+            Questions, wholesale orders, and custom batch requests all start
+            here.
+          </p>
+        </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 ">
-          {/* Image Side */}
-          <motion.div
-            initial={{ opacity: 0, x: -40 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.7 }}
-            className="lg:relative h-auto  rounded-xl"
-          >
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+          <div className="relative min-h-[360px] overflow-hidden rounded-lg border border-white/10 bg-zinc-950 shadow-2xl lg:min-h-full">
             <Image
               src="/images/contactus.png"
-              alt="Contact"
+              alt="MRV beef jerky contact"
               fill
-              className="object-cover  !h-[471px] "
+              className="object-cover"
+              sizes="(min-width: 1024px) 50vw, 100vw"
             />
-          </motion.div>
+            <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-transparent" />
+          </div>
 
-          {/* Form Side */}
-          <motion.div
-            initial={{ opacity: 0, x: 40 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.7, delay: 0.2 }}
-          >
-            <Card className="rounded-xl border-border">
+          <div>
+            <Card className="rounded-lg border-white/10 bg-black/55 text-white shadow-[0_18px_45px_rgba(0,0,0,0.32)]">
               <CardHeader>
-                <CardTitle className="text-2xl font-bold">
+                <CardTitle className="font-heading text-2xl font-bold uppercase">
                   Send us a message
                 </CardTitle>
-                <CardDescription>
-                  Fill out the form below and we’ll get back to you.
+                <CardDescription className="text-zinc-400">
+                  Fill out the form below and we&apos;ll get back to you.
                 </CardDescription>
               </CardHeader>
 
@@ -78,35 +62,35 @@ export function Contact() {
                   {/* Name */}
                   <div className="space-y-2">
                     <Label>Name</Label>
-                    <Input placeholder="Your name" />
+                    <Input className="border-white/15 bg-white/8 text-white placeholder:text-zinc-500" placeholder="Your name" />
                   </div>
 
                   {/* Email */}
                   <div className="space-y-2">
                     <Label>Email</Label>
-                    <Input type="email" placeholder="you@example.com" />
+                    <Input className="border-white/15 bg-white/8 text-white placeholder:text-zinc-500" type="email" placeholder="you@example.com" />
                   </div>
 
                   {/* Phone */}
                   <div className="space-y-2">
                     <Label>Phone</Label>
-                    <Input placeholder="01XXXXXXXXX" />
+                    <Input className="border-white/15 bg-white/8 text-white placeholder:text-zinc-500" placeholder="01XXXXXXXXX" />
                   </div>
 
                   {/* Message */}
                   <div className="space-y-2">
                     <Label>Message</Label>
-                    <Textarea placeholder="Write your message..." rows={5} />
+                    <Textarea className="border-white/15 bg-white/8 text-white placeholder:text-zinc-500" placeholder="Write your message..." rows={5} />
                   </div>
 
                   {/* Button */}
-                  <Button className="w-full font-bold uppercase tracking-wider">
+                  <Button className="h-12 w-full rounded-[4px] font-heading font-bold uppercase tracking-wider">
                     Send Message
                   </Button>
                 </form>
               </CardContent>
             </Card>
-          </motion.div>
+          </div>
         </div>
       </div>
     </section>
