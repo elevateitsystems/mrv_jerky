@@ -44,9 +44,9 @@ export function Header() {
 
         {/* Logo */}
         <div className="flex flex-1 items-center justify-between">
-          <Link href="/" className="flex items-center gap-2">
+          <Link href="/" className="flex items-center gap-2 bg-wh">
             <Image
-              src="/images/logo.png"
+              src="/images/logo1.png"
               alt="MRV Jerky Logo"
               width={72}
               height={72}
