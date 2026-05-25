@@ -110,7 +110,7 @@ export function Header() {
         </nav>
 
         {/* Cart/CTA */}
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-4 ml-8">
           <Button
             variant="ghost"
             size="icon"
