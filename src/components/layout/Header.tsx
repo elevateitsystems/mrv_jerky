@@ -41,42 +41,60 @@ export function Header() {
     >
       <div className="container mx-auto px-4 md:px-6 h-20 flex items-center justify-between">
         {/* Mobile Menu */}
-        <Sheet>
-          <SheetTrigger
-            render={
-              <Button variant="ghost" size="icon" className="md:hidden" />
-            }
-          >
-            <Menu className="h-6 w-6" />
-            <span className="sr-only">Toggle navigation menu</span>
-          </SheetTrigger>
-          <SheetContent side="left" className="w-[300px] border-primary/20 bg-zinc-950 text-white sm:w-[400px]">
-            <SheetTitle className="sr-only">Menu</SheetTitle>
-            <nav className="flex flex-col gap-6 mt-10">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.name}
-                  href={link.href}
-                  className="text-2xl font-heading hover:text-primary"
-                >
-                  {link.name}
-                </Link>
-              ))}
-            </nav>
-          </SheetContent>
-        </Sheet>
 
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-2">
-          <Image
-            src="/images/logo.png"
-            alt="MRV Jerky Logo"
-            width={72}
-            height={72}
-            className="h-16 w-16 object-contain md:h-[4.5rem] md:w-[4.5rem]"
-            priority
-          />
-        </Link>
+        <div className="flex flex-1 items-center justify-between">
+          <Link href="/" className="flex items-center gap-2">
+            <Image
+              src="/images/logo.png"
+              alt="MRV Jerky Logo"
+              width={72}
+              height={72}
+              className="h-16 w-16 object-contain md:h-[4.5rem] md:w-[4.5rem]"
+              priority
+            />
+          </Link>
+          <div className="flex items-center gap-4 md:hidden">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="relative block md:hidden text-white hover:bg-white/10 hover:text-primary"
+            >
+              <ShoppingCart className="h-6 w-6" />
+              <span className="absolute -top-1 -right-1 bg-primary text-primary-foreground text-xs font-bold h-5 w-5 flex items-center justify-center rounded-full">
+                0
+              </span>
+              <span className="sr-only">Cart</span>
+            </Button>
+            <Sheet>
+              <SheetTrigger
+                render={
+                  <Button variant="ghost" size="icon" className="md:hidden" />
+                }
+              >
+                <Menu className="h-6 w-6 stroke-white" />
+                <span className="sr-only">Toggle navigation menu</span>
+              </SheetTrigger>
+              <SheetContent
+                side="right"
+                className="w-[300px] border-primary/20 bg-zinc-950 text-white sm:w-[400px] pl-8"
+              >
+                <SheetTitle className="sr-only">Menu</SheetTitle>
+                <nav className="flex flex-col gap-6 mt-10">
+                  {navLinks.map((link) => (
+                    <Link
+                      key={link.name}
+                      href={link.href}
+                      className="text-2xl font-heading hover:text-primary"
+                    >
+                      {link.name}
+                    </Link>
+                  ))}
+                </nav>
+              </SheetContent>
+            </Sheet>
+          </div>
+        </div>
 
         {/* Desktop Nav */}
         <nav className="hidden md:flex items-center gap-8">
@@ -104,7 +122,7 @@ export function Header() {
           <Button
             variant="ghost"
             size="icon"
-            className="relative text-white hover:bg-white/10 hover:text-primary"
+            className="relative hidden md:block text-white hover:bg-white/10 hover:text-primary"
           >
             <ShoppingCart className="h-6 w-6" />
             <span className="absolute -top-1 -right-1 bg-primary text-primary-foreground text-xs font-bold h-5 w-5 flex items-center justify-center rounded-full">
