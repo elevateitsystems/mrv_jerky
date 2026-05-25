@@ -20,7 +20,7 @@ export function Hero() {
         <div className="flex max-w-5xl flex-col items-start gap-6 md:flex-row md:items-center md:gap-10">
           <div className="relative size-52 shrink-0 md:h-72 md:w-72 lg:h-80 lg:w-80">
             <Image
-              src="/images/logo.png"
+              src="/images/logo1.png"
               alt="MRV Beef Jerky Company logo"
               fill
               className="object-contain drop-shadow-[0_18px_38px_rgba(0,0,0,0.75)]"
