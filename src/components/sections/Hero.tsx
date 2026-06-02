@@ -3,12 +3,13 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 
 export function Hero() {
   return (
     <section className="relative min-h-[650px] h-[86vh] flex items-end overflow-hidden bg-black">
       <div className="absolute inset-0 z-0">
-        <div 
+        <div
           className="absolute inset-0 bg-cover bg-center"
           style={{ backgroundImage: "url('/images/hero-image.webp')" }}
         />
@@ -30,34 +31,46 @@ export function Hero() {
           </div>
 
           <div className="max-w-xl">
-          <span className="inline-flex border border-primary/60 bg-black/60 px-3 py-1 text-xs font-bold uppercase tracking-[0.24em] text-primary shadow-[0_0_24px_rgba(110,75,174,0.35)] backdrop-blur">
-            Middle River Valley Beef Jerky
-          </span>
+            <span className="inline-flex border border-primary/60 bg-black/60 px-3 py-1 text-xs font-bold uppercase tracking-[0.24em] text-primary shadow-[0_0_24px_rgba(110,75,174,0.35)] backdrop-blur">
+              Middle River Valley Beef Jerky
+            </span>
 
-          <h1 className="mt-5 font-heading text-4xl font-bold uppercase leading-[0.95] tracking-wide text-white drop-shadow-xl md:text-6xl lg:text-7xl">
-            Real Ingredients.
-            <span className="block text-primary">Bold Flavor.</span>
-          </h1>
+            <h1 className="mt-5 font-heading text-4xl font-bold uppercase leading-[0.95] tracking-wide text-white drop-shadow-xl md:text-6xl lg:text-7xl">
+              Real Ingredients.
+              <span className="block text-primary">Bold Flavor.</span>
+            </h1>
 
-          <div className="my-5 flex max-w-md items-center gap-3 text-primary">
-            <span className="h-px flex-1 bg-white/40" />
-            <span className="h-2 w-2 rotate-45 bg-primary" />
-            <span className="h-px flex-1 bg-white/40" />
-          </div>
+            <div className="my-5 flex max-w-md items-center gap-3 text-primary">
+              <span className="h-px flex-1 bg-white/40" />
+              <span className="h-2 w-2 rotate-45 bg-primary" />
+              <span className="h-px flex-1 bg-white/40" />
+            </div>
 
-          <p className="max-w-md text-base font-medium leading-7 text-white/90 md:text-lg">
-            Premium beef jerky made the right way. No shortcuts. No fillers.
-            Just real flavor from our valley to you.
-          </p>
+            <p className="max-w-md text-base font-medium leading-7 text-white/90 md:text-lg">
+              Premium beef jerky made the right way. No shortcuts. No fillers.
+              Just real flavor from our valley to you.
+            </p>
 
-          <div className="mt-6 flex flex-wrap gap-3">
-            <Button size="lg" className="h-12 rounded-[4px] px-7 font-heading text-base font-bold uppercase tracking-wider shadow-[0_0_26px_rgba(110,75,174,0.55)]">
-              Shop Now <ArrowRight className="ml-2 h-4 w-4" />
-            </Button>
-            <Button size="lg" variant="outline" className="h-12 rounded-[4px] border-white/45 bg-black/40 px-7 font-heading text-base font-bold uppercase tracking-wider text-white backdrop-blur hover:bg-white hover:text-black">
-              Our Story
-            </Button>
-          </div>
+            <div className="mt-6 flex flex-wrap gap-3">
+              <Link href={"#products"}>
+                <Button
+                  size="lg"
+                  className="h-12 rounded-[4px] px-7 font-heading text-base font-bold uppercase tracking-wider shadow-[0_0_26px_rgba(110,75,174,0.55)]"
+                >
+                  Shop Now <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+              </Link>
+
+              <Link href="#about">
+                <Button
+                  size="lg"
+                  variant="outline"
+                  className="h-12 rounded-[4px] border-white/45 bg-black/40 px-7 font-heading text-base font-bold uppercase tracking-wider text-white backdrop-blur hover:bg-white hover:text-black"
+                >
+                  Our Story
+                </Button>
+              </Link>
+            </div>
           </div>
         </div>
       </div>

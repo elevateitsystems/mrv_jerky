@@ -9,6 +9,7 @@ const features = [
   "No Artificial Preservatives",
   "Sourced from Local Farms",
   "Marinated for 24 Hours",
+  "Enjoy grilled, fried or straight from the pack.",
 ];
 
 export function About() {
@@ -19,15 +20,11 @@ export function About() {
     >
       <div className="container mx-auto px-4 md:px-6">
         <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
-          <div
-            className="w-full lg:w-1/2 relative"
-          >
+          <div className="w-full lg:w-1/2 relative">
             <div className="relative aspect-square max-w-lg mx-auto">
               <div className="absolute inset-0 -translate-x-4 translate-y-4 rounded-lg border border-primary/30 bg-primary/15" />
 
-              <div
-                className="absolute inset-0 overflow-hidden rounded-lg border border-white/10 bg-zinc-900 shadow-2xl"
-              >
+              <div className="absolute inset-0 overflow-hidden rounded-lg border border-white/10 bg-zinc-900 shadow-2xl">
                 <Image
                   src="/images/about-placeholder.png"
                   alt="MRV beef jerky ingredients and process"
@@ -49,43 +46,41 @@ export function About() {
             </div>
           </div>
 
-          <div
-            className="w-full lg:w-1/2"
-          >
+          <div className="w-full lg:w-1/2">
             <p className="mb-3 font-heading text-sm font-bold uppercase tracking-[0.28em] text-primary">
               Our Story
             </p>
             <h2 className="font-heading text-4xl md:text-5xl font-bold uppercase mb-6">
-              Real Ingredients. <span className="text-primary">Bold Flavor.</span>
+              Real Ingredients.{" "}
+              <span className="text-primary">Bold Flavor.</span>
             </h2>
 
             <p className="text-lg text-zinc-300 mb-6">
               Middle River Valley jerky is built around honest cuts, deep
               marinades, and the kind of smoke-forward flavor that feels right
-              at home in mountain country.
+              at home in mountain country and feels right at home on the trail,
+              boat, campsite, or anywhere you&apos;d like to enjoy.
             </p>
 
             <p className="text-lg text-zinc-300 mb-8">
               Every bag is crafted in small batches with premium beef, no
               fillers, and a patient process that keeps the texture tender and
-              the flavor clean.
+              the flavor clean. Our Beef sticks are of such high quality that we
+              recommend you try them grilled, fried, with eggs, breakfast
+              burritos, ramen, even pizza. Trust us, we are certain you'll find
+              ways to take advantage of our bold flavors.
             </p>
 
             <ul className="space-y-4 mb-8">
               {features.map((feature, index) => (
                 <li key={index} className="flex items-center gap-3">
                   <CheckCircle2 className="h-6 w-6 text-primary flex-shrink-0" />
-                  <span className="font-bold text-lg text-white">{feature}</span>
+                  <span className="font-bold text-lg text-white">
+                    {feature}
+                  </span>
                 </li>
               ))}
             </ul>
-
-            <Button
-              size="lg"
-              className="h-12 rounded-[4px] px-8 font-heading font-bold uppercase tracking-wider"
-            >
-              Read Our Story
-            </Button>
           </div>
         </div>
       </div>

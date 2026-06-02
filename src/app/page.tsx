@@ -1,11 +1,11 @@
-import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
+import { Header } from "@/components/layout/Header";
+import { About } from "@/components/sections/About";
+import { Contact } from "@/components/sections/Contact";
 import { Hero } from "@/components/sections/Hero";
 import { Marquee } from "@/components/sections/Marquee";
 import { Products } from "@/components/sections/Products";
-import { About } from "@/components/sections/About";
-import { Newsletter } from "@/components/sections/Newsletter";
-import { Contact } from "@/components/sections/Contact";
+import { StoreLocator } from "@/components/sections/StoreLocator";
 
 export default function Home() {
   return (
@@ -16,7 +16,7 @@ export default function Home() {
         <Marquee />
         <Products />
         <About />
-        <Newsletter />
+        <StoreLocator />
         <Contact />
       </main>
       <Footer />
