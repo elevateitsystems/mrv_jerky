@@ -16,7 +16,7 @@ const navLinks = [
   { name: "Home", href: "/" },
   { name: "Our Story", href: "#about" },
   { name: "Shop", href: "#products" },
-  { name: "Wholesale", href: "#contact" },
+  { name: "Stores", href: "#stores" },
   { name: "Contact", href: "#contact" },
 ];
 

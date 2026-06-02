@@ -2,8 +2,8 @@ import { BadgeCheck, Dumbbell, Leaf, Mountain } from "lucide-react";
 
 const benefits = [
   {
-    title: "100% Premium Beef",
-    text: "High-quality cuts, no compromises.",
+    title: "100% Premium US Beef",
+    text: "High-quality US Beef & cuts, no compromises.",
     icon: BadgeCheck,
   },
   {
