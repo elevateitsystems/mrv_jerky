@@ -1,41 +1,35 @@
 "use client";
 
-const stores = [
+export const stores = [
   {
     id:1,
     name: "Cask and Barrel",
-    url: "https://maps.app.goo.gl/o5QbuA6VPrz2ByThG",
     embed: "https://www.google.com/maps?q=Cask%20and%20Barrel&output=embed",
   },
   {
     id:2,
     name: "El Cejas Meat Market",
-    url: "https://maps.app.goo.gl/Ws1NHwqL5JhJYVbJ7?g_st=lc",
     embed:
       "https://www.google.com/maps?q=El%20Cejas%20Meat%20Market&output=embed",
   },
   {
      id:3,
     name: "Trove Spirits",
-    url: "https://maps.app.goo.gl/oYbC8KJ5SKHn4JkV8?g_st=lc",
     embed: "https://www.google.com/maps?q=Trove%20Spirits&output=embed",
   },
   {
      id:4,
     name: "Oakdale 7-11",
-    url: "https://maps.app.goo.gl/r1JNuygGZAulknuS6?g_st=lc",
     embed: "https://www.google.com/maps?q=7-Eleven%20Oakdale&output=embed",
   },
   {
      id:5,
     name: "Tracy Marina",
-    url: "https://maps.app.goo.gl/UdvuzNNI3db3VLom6?g_st=lc",
     embed: "https://www.google.com/maps?q=Tracy%20Marina&output=embed",
   },
   {
      id:6,
     name: "Lodi Discount Cigarettes",
-    url: "https://maps.app.goo.gl/N8HTH9CZyu7v2RVG8?g_st=lc",
     embed:
       "https://www.google.com/maps?q=Lodi%20Discount%20Cigarettes&output=embed",
   },

@@ -19,7 +19,7 @@ export function Hero() {
 
       <div className="container relative z-10 mx-auto px-4 pb-8 md:px-6 md:pb-12 lg:pb-16">
         <div className="flex max-w-5xl flex-col items-start gap-6 md:flex-row md:items-center md:gap-10">
-          <div className="relative size-52 shrink-0 md:h-72 md:w-72 lg:h-80 lg:w-80">
+          <div className="relative mx-auto top-4 sm:top-0 size-52 shrink-0 md:h-72 md:w-72 lg:h-80 lg:w-80">
             <Image
               src="/images/logo1.png"
               alt="MRV Beef Jerky Company logo"
@@ -55,7 +55,7 @@ export function Hero() {
               <Link href={"#products"}>
                 <Button
                   size="lg"
-                  className="h-12 rounded-[4px] px-7 font-heading text-base font-bold uppercase tracking-wider shadow-[0_0_26px_rgba(110,75,174,0.55)]"
+                  className="cursor-pointer h-12 rounded-[4px] px-7 font-heading text-base font-bold uppercase tracking-wider shadow-[0_0_26px_rgba(110,75,174,0.55)]"
                 >
                   Shop Now <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
@@ -65,7 +65,7 @@ export function Hero() {
                 <Button
                   size="lg"
                   variant="outline"
-                  className="h-12 rounded-[4px] border-white/45 bg-black/40 px-7 font-heading text-base font-bold uppercase tracking-wider text-white backdrop-blur hover:bg-white hover:text-black"
+                  className="cursor-pointer h-12 rounded-[4px] border-white/45 bg-black/40 px-7 font-heading text-base font-bold uppercase tracking-wider text-white backdrop-blur hover:bg-white hover:text-black"
                 >
                   Our Story
                 </Button>
