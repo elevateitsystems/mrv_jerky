@@ -10,7 +10,7 @@ export function Footer() {
           <div className="md:col-span-2">
             <Link href="/" className="mb-4 inline-flex items-center gap-3">
               <Image
-                src="/images/logo.png"
+                src="/images/logo1.png"
                 alt="MRV Jerky Logo"
                 width={72}
                 height={72}

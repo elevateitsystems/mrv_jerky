@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { ShoppingCart, Menu, UserRound } from "lucide-react";
+import { ShoppingCart, Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -11,6 +11,7 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import Image from "next/image";
+import { useCartStore } from "@/lib/store/useCartStore";
 
 const navLinks = [
   { name: "Home", href: "/" },
@@ -22,14 +23,21 @@ const navLinks = [
 
 export function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  const cartItems = useCartStore((state) => state.items);
 
   useEffect(() => {
+    setMounted(true);
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50);
     };
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  const totalCartCount = mounted
+    ? cartItems.reduce((acc, item) => acc + item.quantity, 0)
+    : 0;
 
   return (
     <header
@@ -55,17 +63,21 @@ export function Header() {
             />
           </Link>
           <div className="flex items-center gap-4 md:hidden">
-            <Button
-              variant="ghost"
-              size="icon"
-              className="relative block md:hidden text-white hover:bg-white/10 hover:text-primary"
-            >
-              <ShoppingCart className="h-6 w-6" />
-              <span className="absolute -top-1 -right-1 bg-primary text-primary-foreground text-xs font-bold h-5 w-5 flex items-center justify-center rounded-full">
-                0
-              </span>
-              <span className="sr-only">Cart</span>
-            </Button>
+            <Link href="/checkout">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="relative text-white hover:bg-white/10 hover:text-primary"
+              >
+                <ShoppingCart className="h-6 w-6" />
+                {totalCartCount > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-primary text-primary-foreground text-xs font-bold h-5 w-5 flex items-center justify-center rounded-full">
+                    {totalCartCount}
+                  </span>
+                )}
+                <span className="sr-only">Cart</span>
+              </Button>
+            </Link>
             <Sheet>
               <SheetTrigger
                 render={
@@ -111,28 +123,26 @@ export function Header() {
 
         {/* Cart/CTA */}
         <div className="flex items-center gap-4 ml-8">
-          <Button
-            variant="ghost"
-            size="icon"
-            className="hidden text-white hover:bg-white/10 hover:text-primary md:inline-flex"
-          >
-            <UserRound className="h-6 w-6" />
-            <span className="sr-only">Account</span>
-          </Button>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="relative hidden md:block text-white hover:bg-white/10 hover:text-primary"
-          >
-            <ShoppingCart className="h-6 w-6" />
-            <span className="absolute -top-1 -right-1 bg-primary text-primary-foreground text-xs font-bold h-5 w-5 flex items-center justify-center rounded-full">
-              0
-            </span>
-            <span className="sr-only">Cart</span>
-          </Button>
-          <Button className="hidden h-12 rounded-[4px] px-7 font-heading text-base font-bold uppercase tracking-wider shadow-[0_0_24px_rgba(110,75,174,0.42)] md:flex">
-            Shop Now
-          </Button>
+          <Link href="/checkout">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="relative text-white hover:bg-white/10 hover:text-primary"
+            >
+              <ShoppingCart className="h-6 w-6" />
+              {totalCartCount > 0 && (
+                <span className="absolute -top-1 -right-1 bg-primary text-primary-foreground text-xs font-bold h-5 w-5 flex items-center justify-center rounded-full">
+                  {totalCartCount}
+                </span>
+              )}
+              <span className="sr-only">Cart</span>
+            </Button>
+          </Link>
+          <Link href="#products" className="cursor-pointer">
+            <Button className=" cursor-pointer hidden h-12 rounded-[4px] px-7 font-heading text-base font-bold uppercase tracking-wider shadow-[0_0_24px_rgba(110,75,174,0.42)] md:flex">
+              Shop Now
+            </Button>
+          </Link>
         </div>
       </div>
     </header>

@@ -84,7 +84,7 @@ export function Contact() {
                   </div>
 
                   {/* Button */}
-                  <Button className="h-12 w-full rounded-[4px] font-heading font-bold uppercase tracking-wider">
+                  <Button className="cursor-pointer h-12 w-full rounded-[4px] font-heading font-bold uppercase tracking-wider">
                     Send Message
                   </Button>
                 </form>

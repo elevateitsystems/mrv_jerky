@@ -67,7 +67,7 @@ export function About() {
               fillers, and a patient process that keeps the texture tender and
               the flavor clean. Our Beef sticks are of such high quality that we
               recommend you try them grilled, fried, with eggs, breakfast
-              burritos, ramen, even pizza. Trust us, we are certain you'll find
+              burritos, ramen, even pizza. Trust us, we are certain you&apos;ll find
               ways to take advantage of our bold flavors.
             </p>
 
