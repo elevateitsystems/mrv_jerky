@@ -1,20 +1,20 @@
 // src/app/admin/layout.tsx
 "use client";
 
-import React, { useEffect, useState } from "react";
-import { useAuthStore } from "@/lib/store/useAuthStore";
-import { useRouter, usePathname } from "next/navigation";
-import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { 
-  Users, 
-  ShoppingBag, 
-  Store, 
-  ClipboardList, 
-  Settings, 
+import { useAuthStore } from "@/lib/store/useAuthStore";
+import {
+  ClipboardList,
+  Loader2,
   LogOut,
-  Loader2 
+  Settings,
+  Store,
+  Users,
 } from "lucide-react";
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
+import React, { useEffect, useState } from "react";
+import { Toaster } from "sonner";
 
 export default function AdminLayout({
   children,
@@ -41,7 +41,9 @@ export default function AdminLayout({
     return (
       <div className="min-h-screen bg-zinc-950 flex flex-col items-center justify-center text-white">
         <Loader2 className="h-8 w-8 text-primary animate-spin" />
-        <p className="text-zinc-500 uppercase tracking-widest text-xs font-bold mt-4">Loading Admin Workspace...</p>
+        <p className="text-zinc-500 uppercase tracking-widest text-xs font-bold mt-4">
+          Loading Admin Workspace...
+        </p>
       </div>
     );
   }
@@ -52,7 +54,7 @@ export default function AdminLayout({
 
   const navLinks = [
     { name: "Orders Table", href: "/admin/orders", icon: ClipboardList },
-    { name: "Products", href: "/admin/products", icon: ShoppingBag },
+    // { name: "Products", href: "/admin/products", icon: ShoppingBag },
     { name: "Store Locator", href: "/admin/stores", icon: Store },
     { name: "Users", href: "/admin/users", icon: Users },
     { name: "Profile Settings", href: "/admin/settings", icon: Settings },
@@ -65,7 +67,7 @@ export default function AdminLayout({
         <div className="p-6 border-b border-white/5">
           <Link href="/admin/orders">
             <h1 className="font-heading text-lg font-black uppercase tracking-wider cursor-pointer">
-             Admin <span className="text-primary">Panel</span>
+              Admin <span className="text-primary">Panel</span>
             </h1>
           </Link>
           <p className="text-xs text-zinc-500 mt-1 uppercase font-bold tracking-widest">
@@ -81,8 +83,8 @@ export default function AdminLayout({
               <Link key={link.href} href={link.href}>
                 <span
                   className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-semibold uppercase tracking-wider transition cursor-pointer ${
-                    isActive 
-                      ? "bg-primary text-white" 
+                    isActive
+                      ? "bg-primary text-white"
                       : "text-zinc-400 hover:bg-zinc-800 hover:text-white"
                   }`}
                 >
@@ -104,13 +106,16 @@ export default function AdminLayout({
             className="w-full justify-start space-x-3 text-zinc-400 border-white/5 hover:border-red-500/50 hover:bg-red-950/20 hover:text-red-400 bg-transparent"
           >
             <LogOut className="h-4 w-4" />
-            <span className="uppercase tracking-wider font-semibold text-xs">Sign Out</span>
+            <span className="uppercase tracking-wider font-semibold text-xs">
+              Sign Out
+            </span>
           </Button>
         </div>
       </aside>
 
       {/* Main Content Area */}
       <main className="flex-1 p-6 md:p-10 overflow-y-auto">
+        <Toaster richColors position="top-right" />
         {children}
       </main>
     </div>

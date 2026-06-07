@@ -1,7 +1,7 @@
+//about.tsx
 "use client";
 
 import { CheckCircle2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import Image from "next/image";
 
 const features = [
@@ -58,8 +58,8 @@ export function About() {
             <p className="text-lg text-zinc-300 mb-6">
               Middle River Valley jerky is built around honest cuts, deep
               marinades, and the kind of smoke-forward flavor that feels right
-              at home in mountain country and feels right at home on the trail,
-              boat, campsite, or anywhere you&apos;d like to enjoy.
+              at home on the trail, boat, campsite, or anywhere you&apos;d like to
+              enjoy.
             </p>
 
             <p className="text-lg text-zinc-300 mb-8">
@@ -67,8 +67,8 @@ export function About() {
               fillers, and a patient process that keeps the texture tender and
               the flavor clean. Our Beef sticks are of such high quality that we
               recommend you try them grilled, fried, with eggs, breakfast
-              burritos, ramen, even pizza. Trust us, we are certain you&apos;ll find
-              ways to take advantage of our bold flavors.
+              burritos, ramen, even pizza. Trust us, we are certain you&apos;ll
+              find ways to take advantage of our bold flavors.
             </p>
 
             <ul className="space-y-4 mb-8">
