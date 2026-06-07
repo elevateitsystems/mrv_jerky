@@ -8,138 +8,184 @@ import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { ShoppingBag, Plus, Trash2, Edit } from "lucide-react";
 import { SkeletonLoader } from "./SkeletonLoader";
-
-const initialMockProducts = [
-  {
-    id: "colorado-mock-id-1",
-    name: "Colorado",
-    price: 7.99,
-    stock: 45,
-    quantity: 5,
-    description: "Colorado bold flavor beef jerky.",
-    image: "/images/Colorado-1.webp",
-  },
-  {
-    id: "southwest-mock-id-2",
-    name: "SouthWest",
-    price: 7.99,
-    stock: 32,
-    quantity: 5,
-    description: "Southwest style smoked beef jerky.",
-    image: "/images/Southwest-1.webp",
-  },
-  {
-    id: "polish-mock-id-3",
-    name: "Polish",
-    price: 7.99,
-    stock: 50,
-    quantity: 5,
-    description: "Polish classic recipe beef jerky.",
-    image: "/images/polish-1.webp",
-  },
-  {
-    id: "teriyaki-mock-id-4",
-    name: "Teriyaki",
-    price: 7.99,
-    stock: 12,
-    quantity: 5,
-    description: "Teriyaki sweet and savory beef jerky.",
-    image: "/images/Teriyaki.webp",
-  },
-];
+import Image from "next/image";
+import { apiRequest } from "@/lib/api";
 
 export function ProductsTab() {
   const [products, setProducts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
   const [productForm, setProductForm] = useState({
     id: "",
     name: "",
     price: "",
+    weight: "",
+    image: "",
+    tag: "",
     stock: "",
     quantity: "",
     description: "",
+    labelImages: [] as string[],
+    comingSoon: false,
   });
+
   const [isEditingProduct, setIsEditingProduct] = useState(false);
   const [showProductModal, setShowProductModal] = useState(false);
 
+  // ---------------- FETCH PRODUCTS ----------------
   useEffect(() => {
-    const timer = setTimeout(() => {
-      // In a real mock app, we can pull from localStorage or local list
-      const stored = localStorage.getItem("mrv_mock_products");
-      if (stored) {
-        setProducts(JSON.parse(stored));
-      } else {
-        setProducts(initialMockProducts);
-        localStorage.setItem("mrv_mock_products", JSON.stringify(initialMockProducts));
+    const loadProducts = async () => {
+      try {
+        setLoading(true);
+        setError("");
+
+        const res = await apiRequest("/products");
+        const data = res?.data || res || [];
+
+        setProducts(Array.isArray(data) ? data : []);
+      } catch (err: any) {
+        setError("Failed to load products");
+        setProducts([]);
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
-    }, 1000);
-    return () => clearTimeout(timer);
+    };
+
+    loadProducts();
   }, []);
 
-  const saveToLocal = (newProducts: any[]) => {
-    setProducts(newProducts);
-    localStorage.setItem("mrv_mock_products", JSON.stringify(newProducts));
+  // -------------- Thubmain Hanlder --------------
+  const handleThumbnailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+
+    if (!file) return;
+
+    const url = URL.createObjectURL(file);
+
+    setProductForm((prev) => ({
+      ...prev,
+      image: url,
+    }));
   };
 
-  const handleSaveProduct = (e: React.FormEvent) => {
+  // ------- Multiple Handler
+  const handleLabelImagesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || []);
+
+    const urls = files.map((file) => URL.createObjectURL(file));
+
+    setProductForm((prev) => ({
+      ...prev,
+      labelImages: [
+        ...(Array.isArray(prev.labelImages) ? prev.labelImages : []),
+        ...urls,
+      ],
+    }));
+  };
+
+  // --------- Remove item from lables images
+  const removeLabelImage = (index: number) => {
+    setProductForm((prev) => ({
+      ...prev,
+      labelImages: (Array.isArray(prev.labelImages)
+        ? prev.labelImages
+        : []
+      ).filter((_, i) => i !== index),
+    }));
+  };
+
+  // ---------------- SAVE (POST / PUT) ----------------
+  const handleSaveProduct = async (e: React.FormEvent) => {
     e.preventDefault();
-    const priceNum = parseFloat(productForm.price) || 0.0;
-    const stockNum = parseInt(productForm.stock) || 0;
-    const qtyNum = parseInt(productForm.quantity) || 0;
 
-    if (isEditingProduct) {
-      const updated = products.map((p) =>
-        p.id === productForm.id
-          ? {
-              ...p,
-              name: productForm.name,
-              price: priceNum,
-              stock: stockNum,
-              quantity: qtyNum,
-              description: productForm.description,
-            }
-          : p
-      );
-      saveToLocal(updated);
-    } else {
-      const newProduct = {
-        id: "mock-prod-" + Date.now(),
-        name: productForm.name,
-        price: priceNum,
-        stock: stockNum,
-        quantity: qtyNum,
-        description: productForm.description,
-        image: "/images/Colorado-1.webp", // Default mock image
-      };
-      saveToLocal([...products, newProduct]);
+    const payload = {
+      id: productForm.id,
+      name: productForm.name,
+      price:
+        productForm.comingSoon || productForm.price === "COMING SOON"
+          ? "COMING SOON"
+          : parseFloat(productForm.price),
+      weight: productForm.weight,
+      image: productForm.image,
+      tag: productForm.tag,
+      description: productForm.description,
+      comingSoon: productForm.comingSoon,
+      labelImages: Array.isArray(productForm.labelImages)
+        ? productForm.labelImages
+        : [],
+    };
+
+    try {
+      if (isEditingProduct) {
+        await apiRequest(`/products/${productForm.id}`, {
+          method: "PUT",
+          body: JSON.stringify(payload),
+        });
+
+        setProducts((prev) =>
+          prev.map((p) => (p.id === productForm.id ? payload : p)),
+        );
+      } else {
+        const res = await apiRequest("/products", {
+          method: "POST",
+          body: JSON.stringify(payload),
+        });
+
+        const newProduct = res?.data || payload;
+        setProducts((prev) => [...prev, newProduct]);
+      }
+
+      setShowProductModal(false);
+    } catch (err) {
+      alert("Failed to save product");
     }
-
-    setShowProductModal(false);
-    setProductForm({ id: "", name: "", price: "", stock: "", quantity: "", description: "" });
   };
 
-  const handleDeleteProduct = (id: string) => {
-    if (!confirm("Are you sure you want to delete this product?")) return;
-    const filtered = products.filter((p) => p.id !== id);
-    saveToLocal(filtered);
+  // ---------------- DELETE ----------------
+  const handleDeleteProduct = async (id: string) => {
+    if (!confirm("Are you sure?")) return;
+
+    try {
+      await apiRequest(`/products/${id}`, {
+        method: "DELETE",
+      });
+
+      setProducts((prev) => prev.filter((p) => p.id !== id));
+    } catch {
+      alert("Delete failed");
+    }
   };
 
-  if (loading) {
-    return <SkeletonLoader rows={4} cols={5} />;
-  }
+  if (loading) return <SkeletonLoader rows={4} cols={5} />;
 
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h2 className="text-2xl font-bold uppercase tracking-wider">Products Inventory</h2>
-          <p className="text-sm text-zinc-400">Add, edit, or delete items in store catalog (Mock Data)</p>
+          <h2 className="text-2xl font-bold uppercase tracking-wider">
+            Products Inventory
+          </h2>
+          <p className="text-sm text-zinc-400">
+            Add, edit, or delete items in store catalog (Mock Data)
+          </p>
         </div>
         <Button
           onClick={() => {
             setIsEditingProduct(false);
-            setProductForm({ id: "", name: "", price: "", stock: "", quantity: "", description: "" });
+            setProductForm({
+              id: "",
+              name: "",
+              price: "",
+              weight: "",
+              image: "",
+              tag: "",
+              stock: "",
+              quantity: "",
+              description: "",
+              labelImages: [],
+              comingSoon: false,
+            });
             setShowProductModal(true);
           }}
           className="bg-primary text-white hover:bg-primary/90 font-bold uppercase"
@@ -157,60 +203,141 @@ export function ProductsTab() {
           </CardHeader>
           <form onSubmit={handleSaveProduct} className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {/* Name */}
               <div className="space-y-2">
-                <Label htmlFor="prodName">Product Name</Label>
+                <Label>Product Name</Label>
                 <Input
-                  id="prodName"
                   value={productForm.name}
-                  onChange={(e) => setProductForm({ ...productForm, name: e.target.value })}
-                  required
+                  onChange={(e) =>
+                    setProductForm({ ...productForm, name: e.target.value })
+                  }
                   className="bg-zinc-950 border-white/10 text-white"
+                  required
                 />
               </div>
+
+              {/* Price */}
               <div className="space-y-2">
-                <Label htmlFor="prodPrice">Price ($)</Label>
+                <Label>Price</Label>
                 <Input
-                  id="prodPrice"
-                  type="number"
-                  step="0.01"
                   value={productForm.price}
-                  onChange={(e) => setProductForm({ ...productForm, price: e.target.value })}
-                  required
+                  onChange={(e) =>
+                    setProductForm({ ...productForm, price: e.target.value })
+                  }
                   className="bg-zinc-950 border-white/10 text-white"
                 />
               </div>
+
+              {/* Weight (NEW) */}
               <div className="space-y-2">
-                <Label htmlFor="prodStock">Stock Quantity</Label>
+                <Label>Weight</Label>
                 <Input
-                  id="prodStock"
-                  type="number"
-                  value={productForm.stock}
-                  onChange={(e) => setProductForm({ ...productForm, stock: e.target.value })}
-                  required
+                  value={productForm.weight}
+                  onChange={(e) =>
+                    setProductForm({ ...productForm, weight: e.target.value })
+                  }
                   className="bg-zinc-950 border-white/10 text-white"
+                  placeholder="e.g. 2 oz"
                 />
               </div>
+
+              {/* Tag (NEW) */}
               <div className="space-y-2">
-                <Label htmlFor="prodQty">Quantity Limit per Order</Label>
+                <Label>Tag</Label>
                 <Input
-                  id="prodQty"
-                  type="number"
-                  value={productForm.quantity}
-                  onChange={(e) => setProductForm({ ...productForm, quantity: e.target.value })}
+                  value={productForm.tag}
+                  onChange={(e) =>
+                    setProductForm({ ...productForm, tag: e.target.value })
+                  }
+                  className="bg-zinc-950 border-white/10 text-white"
+                  placeholder="Best Seller / New / etc"
+                />
+              </div>
+
+              {/* Thumbnail Image (NEW but same style) */}
+              <div className="space-y-2 md:col-span-2">
+                <Label>Thumbnail Image</Label>
+
+                <Input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleThumbnailChange}
                   className="bg-zinc-950 border-white/10 text-white"
                 />
+
+                {productForm.image && (
+                  <div className="relative w-24 h-24 mt-2 rounded overflow-hidden border border-white/10">
+                    <Image
+                      src={productForm.image}
+                      alt="Thumbnail"
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
+                )}
+              </div>
+
+              {/* Label Images (NEW) */}
+              <div className="space-y-2 md:col-span-2">
+                <Label>Label Images</Label>
+
+                <Input
+                  type="file"
+                  accept="image/*"
+                  multiple
+                  onChange={handleLabelImagesChange}
+                  className="bg-zinc-950 border-white/10 text-white"
+                />
+
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-3">
+                  {productForm.labelImages?.map(
+                    (img: string, index: number) => (
+                      <div
+                        key={index}
+                        className="relative rounded overflow-hidden border border-white/10"
+                      >
+                        <div className="relative w-full aspect-square">
+                          <Image
+                            src={img}
+                            alt={`Label ${index}`}
+                            fill
+                            className="object-cover"
+                          />
+                        </div>
+
+                        <Button
+                          type="button"
+                          size="icon"
+                          variant="destructive"
+                          className="absolute top-1 right-1 h-7 w-7"
+                          onClick={() => removeLabelImage(index)}
+                        >
+                          ✕
+                        </Button>
+                      </div>
+                    ),
+                  )}
+                </div>
               </div>
             </div>
+
+            {/* Description (UNCHANGED STYLE) */}
             <div className="space-y-2">
-              <Label htmlFor="prodDesc">Description</Label>
+              <Label>Description</Label>
               <textarea
-                id="prodDesc"
                 rows={3}
                 value={productForm.description}
-                onChange={(e) => setProductForm({ ...productForm, description: e.target.value })}
+                onChange={(e) =>
+                  setProductForm({
+                    ...productForm,
+                    description: e.target.value,
+                  })
+                }
                 className="w-full rounded-md bg-zinc-950 border border-white/10 text-white p-2.5 text-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary"
               />
             </div>
+
+            {/* Buttons (UNCHANGED) */}
             <div className="flex space-x-3 justify-end pt-2">
               <Button
                 type="button"
@@ -220,7 +347,8 @@ export function ProductsTab() {
               >
                 Cancel
               </Button>
-              <Button type="submit" className="bg-primary text-white hover:bg-primary/95">
+
+              <Button type="submit" className="bg-primary text-white">
                 Save
               </Button>
             </div>
@@ -252,18 +380,28 @@ export function ProductsTab() {
                 products.map((prod) => (
                   <tr key={prod.id} className="hover:bg-zinc-850 transition">
                     <td className="p-4">
-                      <div className="w-12 h-12 bg-zinc-950 rounded overflow-hidden border border-white/10 flex items-center justify-center">
+                      <div className="w-12 h-12 bg-zinc-950 rounded overflow-hidden border border-white/10 flex items-center justify-center relative">
                         {prod.image ? (
-                          <img src={prod.image} alt={prod.name} className="object-cover w-full h-full" />
+                          <Image
+                            src={prod.image}
+                            alt={prod.name}
+                            fill
+                            sizes="48px"
+                            className="object-cover"
+                          />
                         ) : (
-                          <ShoppingBag className="h-6 w-6 text-zinc-650" />
+                          <ShoppingBag className="h-6 w-6 text-zinc-500" />
                         )}
                       </div>
                     </td>
                     <td className="p-4 font-bold">{prod.name}</td>
-                    <td className="p-4 text-emerald-400 font-semibold">${parseFloat(prod.price).toFixed(2)}</td>
+                    <td className="p-4 text-emerald-400 font-semibold">
+                      ${parseFloat(prod.price).toFixed(2)}
+                    </td>
                     <td className="p-4 font-mono">{prod.stock} items</td>
-                    <td className="p-4 max-w-xs truncate text-zinc-400">{prod.description || "-"}</td>
+                    <td className="p-4 max-w-xs truncate text-zinc-400">
+                      {prod.description || "-"}
+                    </td>
                     <td className="p-4 text-right space-x-2">
                       <Button
                         size="sm"
@@ -272,11 +410,18 @@ export function ProductsTab() {
                           setIsEditingProduct(true);
                           setProductForm({
                             id: prod.id,
-                            name: prod.name,
-                            price: prod.price.toString(),
-                            stock: prod.stock.toString(),
-                            quantity: (prod.quantity || 0).toString(),
+                            name: prod.name || "",
+                            price: String(prod.price ?? ""),
+                            weight: prod.weight || "",
+                            image: prod.image || "",
+                            tag: prod.tag || "",
+                            stock: String(prod.stock ?? ""),
+                            quantity: String(prod.quantity ?? ""),
                             description: prod.description || "",
+                            labelImages: Array.isArray(prod.labelImages)
+                              ? prod.labelImages
+                              : [],
+                            comingSoon: !!prod.comingSoon,
                           });
                           setShowProductModal(true);
                         }}
