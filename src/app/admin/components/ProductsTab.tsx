@@ -10,6 +10,7 @@ import { ShoppingBag, Plus, Trash2, Edit } from "lucide-react";
 import { SkeletonLoader } from "./SkeletonLoader";
 import Image from "next/image";
 import { apiRequest } from "@/lib/api";
+import { toast } from "sonner";
 
 export function ProductsTab() {
   const [products, setProducts] = useState<any[]>([]);
@@ -138,7 +139,7 @@ export function ProductsTab() {
 
       setShowProductModal(false);
     } catch (err) {
-      alert("Failed to save product");
+      toast.error("Failed to save product");
     }
   };
 
@@ -153,7 +154,7 @@ export function ProductsTab() {
 
       setProducts((prev) => prev.filter((p) => p.id !== id));
     } catch {
-      alert("Delete failed");
+      toast.error("Delete failed");
     }
   };
 

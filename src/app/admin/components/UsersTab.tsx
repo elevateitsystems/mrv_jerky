@@ -6,6 +6,7 @@ import { useAuthStore } from "@/lib/store/useAuthStore";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { SkeletonLoader } from "./SkeletonLoader";
+import { toast } from "sonner";
 
 export function UsersTab() {
   const {
@@ -44,7 +45,7 @@ export function UsersTab() {
       await updateUserRole(userId, nextRole);
     } catch (e: unknown) {
       const message = e instanceof Error ? e.message : String(e);
-      alert(`Error updating role: ${message}`);
+      toast.error(`Error updating role: ${message}`);
     }
   };
 
@@ -55,7 +56,7 @@ export function UsersTab() {
       await deleteUser(userId);
     } catch (e: unknown) {
       const message = e instanceof Error ? e.message : String(e);
-      alert(`Error deleting user: ${message}`);
+      toast.error(`Error deleting user: ${message}`);
     }
   };
 
