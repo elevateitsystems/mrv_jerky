@@ -28,6 +28,7 @@ export default function RootLayout({
       className={`${inter.variable} ${oswald.variable} scroll-smooth antialiased`}
     >
       <body className="min-h-screen flex flex-col font-sans bg-background text-foreground">
+        
         {children}
       </body>
     </html>

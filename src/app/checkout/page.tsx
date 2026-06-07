@@ -1,25 +1,25 @@
 // src/app/checkout/page.tsx
 "use client";
 
-import { useEffect, useState } from "react";
-import { useCartStore } from "@/lib/store/useCartStore";
-import { apiRequest } from "@/lib/api";
+import { mockProducts } from "@/components/sections/Products";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { apiRequest } from "@/lib/api";
+import { useCartStore } from "@/lib/store/useCartStore";
 import {
-  Trash2,
-  Plus,
-  Minus,
   ArrowLeft,
-  Loader2,
   CreditCard,
+  Loader2,
+  Minus,
+  Plus,
   ShoppingBag,
+  Trash2,
 } from "lucide-react";
-import Link from "next/link";
-import { mockProducts } from "@/components/sections/Products";
 import Image from "next/image";
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import { toast, Toaster } from "sonner";
 
 export default function CheckoutPage() {
   const { items, updateQuantity, removeItem, clearCart } = useCartStore();
@@ -63,20 +63,36 @@ export default function CheckoutPage() {
   };
 
   // Fetch all products to resolve details
-  useEffect(() => {
-    const loadProducts = async () => {
-      try {
-        setProducts(mockProducts);
-        // const response = await apiRequest("products?limit=100");
-        // setProducts(response.data || response || []);
-      } catch (err) {
-        console.error("Failed to load products:", err);
-      } finally {
+useEffect(() => {
+  let isMounted = true;
+
+  const loadProducts = async () => {
+    try {
+      const response = await apiRequest("products?limit=100");
+      const data = response?.data ?? response ?? [];
+
+      if (isMounted) {
+        setProducts(Array.isArray(data) ? data : mockProducts || []);
+      }
+    } catch (err) {
+      console.error("Failed to load products:", err);
+
+      if (isMounted) {
+        setProducts(mockProducts || []);
+      }
+    } finally {
+      if (isMounted) {
         setLoadingProducts(false);
       }
-    };
-    loadProducts();
-  }, []);
+    }
+  };
+
+  loadProducts();
+
+  return () => {
+    isMounted = false;
+  };
+}, []);
 
   // Map cart items to full details
   const cartWithDetails = items.map((cartItem) => {
@@ -97,7 +113,7 @@ export default function CheckoutPage() {
   const handleCheckout = async (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitError("");
-    
+
     if (items.length === 0) {
       setSubmitError("Your cart is empty");
       return;
@@ -106,20 +122,46 @@ export default function CheckoutPage() {
     setSubmitting(true);
 
     try {
-      // Static mockup notice as requested
-      setTimeout(() => {
-        alert("Checkout submission simulation successful (mock data).");
-        clearCart();
-        setSubmitting(false);
-      }, 1000);
+      const payload = {
+        products: items.map((item) => ({
+          productId: item.productId,
+          quantity: item.quantity,
+        })),
+        customerEmail: form.customerEmail,
+        customerPhone: form.customerPhone,
+        shippingCountry: "netherlands",
+      };
+
+      console.log("Checkout Payload:", payload);
+
+      const response = await apiRequest("order/checkout", {
+        method: "POST",
+        body: JSON.stringify(payload),
+      });
+
+      if (response?.data) {
+        toast.success("Your order has been successfully received.");
+        clearCart(); // Optional: clear the cart after success
+      } else {
+        throw new Error(
+          "Oops! Your order could not be received. Please try again.",
+        );
+      }
     } catch (err: any) {
-      setSubmitError(err.message || "Failed to create payment session");
+      const errorMessage =
+        err?.message ||
+        "Oops! Your order could not be received. Please try again.";
+
+      setSubmitError(errorMessage);
+      toast.error(errorMessage);
+    } finally {
       setSubmitting(false);
     }
   };
 
   return (
     <div className="min-h-screen bg-zinc-950 text-white py-12 px-4 md:px-8">
+      <Toaster richColors position="top-right" />
       <div className="max-w-6xl mx-auto space-y-8">
         {/* Back Link */}
         <div className="sm:flex items-center justify-between gap-4">
@@ -188,7 +230,7 @@ export default function CheckoutPage() {
                         return (
                           <tr key={productId} className="align-middle">
                             <td className="py-4 flex items-center space-x-4">
-                             <div className="relative w-16 h-16 bg-zinc-950 border border-white/10 rounded overflow-hidden flex items-center justify-center shrink-0">
+                              <div className="relative w-16 h-16 bg-zinc-950 border border-white/10 rounded overflow-hidden flex items-center justify-center shrink-0">
                                 {product.image ? (
                                   <Image
                                     src={product.image}
@@ -311,7 +353,7 @@ export default function CheckoutPage() {
                   />
                 </div>
 
-                <div className="space-y-2">
+                {/* <div className="space-y-2">
                   <Label
                     htmlFor="shippingCountry"
                     className="text-zinc-300 font-bold uppercase tracking-wider text-xs"
@@ -328,7 +370,7 @@ export default function CheckoutPage() {
                     }
                     className="bg-zinc-950 border-white/10 text-white focus-visible:ring-primary"
                   />
-                </div>
+                </div> */}
 
                 <div className="pt-4 border-t border-white/5 space-y-2">
                   <div className="flex justify-between font-bold text-lg">

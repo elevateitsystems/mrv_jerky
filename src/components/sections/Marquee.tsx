@@ -1,3 +1,4 @@
+// marquee.tsx
 import { BadgeCheck, Dumbbell, Leaf, Mountain } from "lucide-react";
 
 const benefits = [
