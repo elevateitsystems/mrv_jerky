@@ -1,12 +1,7 @@
 // src/lib/api.ts
 
 const getBackendUrl = () => {
-  // Use the frontend server proxy during development to avoid browser CORS.
-  if (process.env.NODE_ENV === 'development') {
     return '/api';
-  }
-
-  return process.env.BACKEND_URL || 'https://mrv-jerky-backend.onrender.com/api';
 };
 
 export async function apiRequest<T = any>(
