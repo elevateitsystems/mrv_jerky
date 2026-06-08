@@ -521,7 +521,7 @@ export function ProductsTab() {
                     <td className="p-4">{prod.weight || "-"}</td>
 
                     <td className="p-4 text-right space-x-2">
-                      <Button
+                      {/* <Button
                         size="sm"
                         variant="outline"
                         onClick={() => {
@@ -545,7 +545,7 @@ export function ProductsTab() {
                         className="border-white/10 hover:bg-zinc-800"
                       >
                         <Edit className="h-3 w-3" />
-                      </Button>
+                      </Button> */}
                       <Button
                         size="sm"
                         variant="outline"
