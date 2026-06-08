@@ -41,7 +41,7 @@ export function Gallery() {
                 src={selectedImage.src}
                 alt={selectedImage.alt}
                 fill
-                 sizes="(max-width: 768px) 95vw, (max-width: 1200px) 80vw, 70vw"
+                sizes="(max-width: 768px) 95vw, (max-width: 1200px) 80vw, 70vw"
                 className="object-contain"
               />
             </div>

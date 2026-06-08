@@ -12,23 +12,39 @@ import Image from "next/image";
 import { apiRequest } from "@/lib/api";
 import { toast } from "sonner";
 
+interface ProductImage {
+  id: string;
+  url: string;
+}
+
+interface Product {
+  id: string;
+  name: string;
+  description: string;
+  price: string;
+  stock: number;
+  quantity: number;
+  weight: string | null;
+  tag: string | null;
+  images: ProductImage[];
+}
+
 export function ProductsTab() {
-  const [products, setProducts] = useState<any[]>([]);
+  const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [imagePreviews, setImagePreviews] = useState<string[]>([]);
 
   const [productForm, setProductForm] = useState({
     id: "",
     name: "",
     price: "",
     weight: "",
-    image: "",
     tag: "",
     stock: "",
     quantity: "",
     description: "",
-    labelImages: [] as string[],
-    comingSoon: false,
+    images: [] as File[],
   });
 
   const [isEditingProduct, setIsEditingProduct] = useState(false);
@@ -42,9 +58,9 @@ export function ProductsTab() {
         setError("");
 
         const res = await apiRequest("/products");
-        const data = res?.data || res || [];
-
-        setProducts(Array.isArray(data) ? data : []);
+        const productsData = Array.isArray(res?.data) ? res.data : [];
+        
+        setProducts(productsData);
       } catch (err: any) {
         setError("Failed to load products");
         setProducts([]);
@@ -56,88 +72,149 @@ export function ProductsTab() {
     loadProducts();
   }, []);
 
+  // Cleanup blob preview URLs to avoid memory leaks
+  useEffect(() => {
+    return () => {
+      imagePreviews.forEach((url) => {
+        if (url.startsWith("blob:")) {
+          URL.revokeObjectURL(url);
+        }
+      });
+    };
+  }, [imagePreviews]);
+
   // -------------- Thubmain Hanlder --------------
-  const handleThumbnailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleMainImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
 
     if (!file) return;
 
-    const url = URL.createObjectURL(file);
+    setProductForm((prev) => {
+      const images = [...prev.images];
+      images[0] = file;
 
-    setProductForm((prev) => ({
-      ...prev,
-      image: url,
-    }));
+      return {
+        ...prev,
+        images,
+      };
+    });
+
+    setImagePreviews((prev) => {
+      const previews = [...prev];
+      previews[0] = URL.createObjectURL(file);
+
+      return previews;
+    });
   };
 
   // ------- Multiple Handler
-  const handleLabelImagesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleAdditionalImagesChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     const files = Array.from(e.target.files || []);
 
-    const urls = files.map((file) => URL.createObjectURL(file));
+    if (!files.length) return;
 
     setProductForm((prev) => ({
       ...prev,
-      labelImages: [
-        ...(Array.isArray(prev.labelImages) ? prev.labelImages : []),
-        ...urls,
+      images: [
+        ...(prev.images.slice(0, 1) || []),
+        ...(prev.images.slice(1) || []),
+        ...files,
       ],
     }));
+
+    setImagePreviews((prev) => [
+      ...(prev.slice(0, 1) || []),
+      ...(prev.slice(1) || []),
+      ...files.map((file) => URL.createObjectURL(file)),
+    ]);
   };
 
   // --------- Remove item from lables images
-  const removeLabelImage = (index: number) => {
+  const removeAdditionalImage = (index: number) => {
     setProductForm((prev) => ({
       ...prev,
-      labelImages: (Array.isArray(prev.labelImages)
-        ? prev.labelImages
-        : []
-      ).filter((_, i) => i !== index),
+      images: [
+        prev.images[0],
+        ...prev.images.slice(1).filter((_, i) => i !== index),
+      ].filter(Boolean) as File[],
     }));
+
+    setImagePreviews((prev) => [
+      prev[0],
+      ...prev.slice(1).filter((_, i) => i !== index),
+    ]);
   };
 
   // ---------------- SAVE (POST / PUT) ----------------
   const handleSaveProduct = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const payload = {
-      id: productForm.id,
-      name: productForm.name,
-      price:
-        productForm.comingSoon || productForm.price === "COMING SOON"
-          ? "COMING SOON"
-          : parseFloat(productForm.price),
-      weight: productForm.weight,
-      image: productForm.image,
-      tag: productForm.tag,
-      description: productForm.description,
-      comingSoon: productForm.comingSoon,
-      labelImages: Array.isArray(productForm.labelImages)
-        ? productForm.labelImages
-        : [],
-    };
+    const formData = new FormData();
 
+    formData.append("name", productForm.name);
+    formData.append("price", productForm.price);
+
+    if (productForm.weight) {
+      formData.append("weight", productForm.weight);
+    }
+
+    if (productForm.tag) {
+      formData.append("tag", productForm.tag);
+    }
+
+    if (productForm.description) {
+      formData.append("description", productForm.description);
+    }
+
+    if (productForm.stock) {
+      formData.append("stock", productForm.stock);
+    }
+
+    if (productForm.quantity) {
+      formData.append("quantity", productForm.quantity);
+    }
+
+    productForm.images.forEach((file) => {
+      formData.append("images", file);
+    });
+    // console.log({ payload });
     try {
       if (isEditingProduct) {
-        await apiRequest(`/products/${productForm.id}`, {
+        const updated = await apiRequest(`/products/${productForm.id}`, {
           method: "PUT",
-          body: JSON.stringify(payload),
+          body: formData,
         });
 
         setProducts((prev) =>
-          prev.map((p) => (p.id === productForm.id ? payload : p)),
+          prev.map((p) => (p.id === productForm.id ? updated.data : p)),
         );
+        toast.success("Product updated successfully");
       } else {
         const res = await apiRequest("/products", {
           method: "POST",
-          body: JSON.stringify(payload),
+          body: formData,
         });
 
-        const newProduct = res?.data || payload;
-        setProducts((prev) => [...prev, newProduct]);
+        setProducts((prev) => [...prev, res.data]);
+        toast.success("Product created successfully");
       }
 
       setShowProductModal(false);
+      setProductForm({
+        id: "",
+        name: "",
+        price: "",
+        weight: "",
+        tag: "",
+        stock: "",
+        quantity: "",
+        description: "",
+        images: [],
+      });
+
+      setImagePreviews([]);
     } catch (err) {
       toast.error("Failed to save product");
     }
@@ -153,6 +230,7 @@ export function ProductsTab() {
       });
 
       setProducts((prev) => prev.filter((p) => p.id !== id));
+      toast.success("Product deleted successfully");
     } catch {
       toast.error("Delete failed");
     }
@@ -174,18 +252,17 @@ export function ProductsTab() {
         <Button
           onClick={() => {
             setIsEditingProduct(false);
+            setImagePreviews([]);
             setProductForm({
               id: "",
               name: "",
               price: "",
               weight: "",
-              image: "",
+              images: [],
               tag: "",
               stock: "",
               quantity: "",
               description: "",
-              labelImages: [],
-              comingSoon: false,
             });
             setShowProductModal(true);
           }}
@@ -221,9 +298,46 @@ export function ProductsTab() {
               <div className="space-y-2">
                 <Label>Price</Label>
                 <Input
+                  type="number"
+                  min="0"
+                  step="0.01"
                   value={productForm.price}
                   onChange={(e) =>
                     setProductForm({ ...productForm, price: e.target.value })
+                  }
+                  className="bg-zinc-950 border-white/10 text-white"
+                />
+              </div>
+
+              {/* Stock */}
+              <div className="space-y-2">
+                <Label>Stock</Label>
+                <Input
+                  type="number"
+                  min="0"
+                  value={productForm.stock}
+                  onChange={(e) =>
+                    setProductForm({
+                      ...productForm,
+                      stock: e.target.value,
+                    })
+                  }
+                  className="bg-zinc-950 border-white/10 text-white"
+                />
+              </div>
+
+              {/* Quantity */}
+              <div className="space-y-2">
+                <Label>Quantity</Label>
+                <Input
+                  type="number"
+                  min="0"
+                  value={productForm.quantity}
+                  onChange={(e) =>
+                    setProductForm({
+                      ...productForm,
+                      quantity: e.target.value,
+                    })
                   }
                   className="bg-zinc-950 border-white/10 text-white"
                 />
@@ -257,19 +371,19 @@ export function ProductsTab() {
 
               {/* Thumbnail Image (NEW but same style) */}
               <div className="space-y-2 md:col-span-2">
-                <Label>Thumbnail Image</Label>
+                <Label>Main Product Image</Label>
 
                 <Input
                   type="file"
                   accept="image/*"
-                  onChange={handleThumbnailChange}
+                  onChange={handleMainImageChange}
                   className="bg-zinc-950 border-white/10 text-white"
                 />
 
-                {productForm.image && (
+                {imagePreviews?.[0] && (
                   <div className="relative w-24 h-24 mt-2 rounded overflow-hidden border border-white/10">
                     <Image
-                      src={productForm.image}
+                      src={imagePreviews[0]}
                       alt="Thumbnail"
                       fill
                       className="object-cover"
@@ -280,44 +394,42 @@ export function ProductsTab() {
 
               {/* Label Images (NEW) */}
               <div className="space-y-2 md:col-span-2">
-                <Label>Label Images</Label>
+                <Label>Nutrition / Ingredient Images</Label>
 
                 <Input
                   type="file"
                   accept="image/*"
                   multiple
-                  onChange={handleLabelImagesChange}
+                  onChange={handleAdditionalImagesChange}
                   className="bg-zinc-950 border-white/10 text-white"
                 />
 
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-3">
-                  {productForm.labelImages?.map(
-                    (img: string, index: number) => (
-                      <div
-                        key={index}
-                        className="relative rounded overflow-hidden border border-white/10"
-                      >
-                        <div className="relative w-full aspect-square">
-                          <Image
-                            src={img}
-                            alt={`Label ${index}`}
-                            fill
-                            className="object-cover"
-                          />
-                        </div>
-
-                        <Button
-                          type="button"
-                          size="icon"
-                          variant="destructive"
-                          className="absolute top-1 right-1 h-7 w-7"
-                          onClick={() => removeLabelImage(index)}
-                        >
-                          ✕
-                        </Button>
+                  {imagePreviews?.slice(1).map((img: string, index: number) => (
+                    <div
+                      key={index}
+                      className="relative rounded overflow-hidden border border-white/10"
+                    >
+                      <div className="relative w-full aspect-square">
+                        <Image
+                          src={img}
+                          alt={`Label ${index}`}
+                          fill
+                          className="object-cover"
+                        />
                       </div>
-                    ),
-                  )}
+
+                      <Button
+                        type="button"
+                        size="icon"
+                        variant="destructive"
+                        className="absolute top-1 right-1 h-7 w-7"
+                        onClick={() => removeAdditionalImage(index)}
+                      >
+                        ✕
+                      </Button>
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
@@ -366,14 +478,15 @@ export function ProductsTab() {
                 <th className="p-4 font-black">Name</th>
                 <th className="p-4 font-black">Price</th>
                 <th className="p-4 font-black">Stock</th>
-                <th className="p-4 font-black">Description</th>
+                <th className="p-4 font-black">Quantity</th>
+                <th className="p-4 font-black">Weight</th>
                 <th className="p-4 font-black text-right">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-white/5">
               {products.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="p-8 text-center text-zinc-500">
+                  <td colSpan={9} className="p-8 text-center text-zinc-500">
                     No products found.
                   </td>
                 </tr>
@@ -382,9 +495,9 @@ export function ProductsTab() {
                   <tr key={prod.id} className="hover:bg-zinc-850 transition">
                     <td className="p-4">
                       <div className="w-12 h-12 bg-zinc-950 rounded overflow-hidden border border-white/10 flex items-center justify-center relative">
-                        {prod.image ? (
+                        {prod.images?.[0]?.url ? (
                           <Image
-                            src={prod.image}
+                            src={prod.images[0].url}
                             alt={prod.name}
                             fill
                             sizes="48px"
@@ -395,14 +508,18 @@ export function ProductsTab() {
                         )}
                       </div>
                     </td>
+
                     <td className="p-4 font-bold">{prod.name}</td>
                     <td className="p-4 text-emerald-400 font-semibold">
                       ${parseFloat(prod.price).toFixed(2)}
                     </td>
-                    <td className="p-4 font-mono">{prod.stock} items</td>
-                    <td className="p-4 max-w-xs truncate text-zinc-400">
-                      {prod.description || "-"}
-                    </td>
+
+                    <td className="p-4 font-mono">{prod.stock ?? 0}</td>
+
+                    <td className="p-4 font-mono">{prod.quantity ?? 0}</td>
+
+                    <td className="p-4">{prod.weight || "-"}</td>
+
                     <td className="p-4 text-right space-x-2">
                       <Button
                         size="sm"
@@ -414,16 +531,15 @@ export function ProductsTab() {
                             name: prod.name || "",
                             price: String(prod.price ?? ""),
                             weight: prod.weight || "",
-                            image: prod.image || "",
+                            images: [], // important
                             tag: prod.tag || "",
                             stock: String(prod.stock ?? ""),
                             quantity: String(prod.quantity ?? ""),
                             description: prod.description || "",
-                            labelImages: Array.isArray(prod.labelImages)
-                              ? prod.labelImages
-                              : [],
-                            comingSoon: !!prod.comingSoon,
                           });
+                          setImagePreviews(
+                            prod.images?.map((img: any) => img.url) || [],
+                          );
                           setShowProductModal(true);
                         }}
                         className="border-white/10 hover:bg-zinc-800"

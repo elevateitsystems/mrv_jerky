@@ -71,18 +71,26 @@ export const useOrdersStore = create<OrdersState>((set, get) => ({
   error: null,
 
   setFilters: (newFilters) => {
-    set((state) => ({
-      filters: { ...state.filters, ...newFilters },
-      page: 1, // reset page automatically
-    }));
+    set((state) => {
+      const updated = {
+        ...state.filters,
+        ...newFilters,
+      };
 
-    // background fetch (NO skeleton reload)
-    get().fetchOrders({ silent: true });
+      return {
+        filters: updated,
+        page: 1,
+      };
+    });
+
+    setTimeout(() => {
+      get().fetchOrders({ silent: true });
+    }, 0);
   },
 
   setPage: (page) => {
     set({ page });
-    get().fetchOrders({ silent: true });
+    get().fetchOrders();
   },
 
   resetFilters: () => {
@@ -96,7 +104,9 @@ export const useOrdersStore = create<OrdersState>((set, get) => ({
       page: 1,
     });
 
-    get().fetchOrders({ silent: true });
+    setTimeout(() => {
+      get().fetchOrders({ silent: true });
+    }, 0);
   },
 
   fetchOrders: async ({ silent = false } = {}) => {
@@ -114,19 +124,33 @@ export const useOrdersStore = create<OrdersState>((set, get) => ({
         limit: String(limit),
       });
 
+      if (filters.search?.trim()) {
+        params.append("search", filters.search.trim());
+      }
+
+      if (filters.status) {
+        params.append("status", filters.status);
+      }
+
+      if (filters.fromDate) {
+        params.append("fromDate", filters.fromDate);
+      }
+
+      if (filters.toDate) {
+        params.append("toDate", filters.toDate);
+      }
+
       if (filters.search) params.append("search", filters.search);
       if (filters.status) params.append("status", filters.status);
       if (filters.fromDate) params.append("fromDate", filters.fromDate);
       if (filters.toDate) params.append("toDate", filters.toDate);
 
-      const response = await apiRequest(
-        `order?${params.toString()}`
-      );
+      const response = await apiRequest(`order?${params.toString()}`);
 
-      const data = response.data || response;
+      const resData = response.data ?? [];
 
       set({
-        orders: Array.isArray(data) ? data : [],
+        orders: Array.isArray(resData) ? resData : [],
         pagination: response.meta?.pagination ?? null,
         isInitialLoading: false,
         isFetching: false,

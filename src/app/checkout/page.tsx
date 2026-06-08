@@ -18,10 +18,12 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast, Toaster } from "sonner";
 
 export default function CheckoutPage() {
+  const router = useRouter();
   const { items, updateQuantity, removeItem, clearCart } = useCartStore();
 
   const [products, setProducts] = useState<any[]>([]);
@@ -63,36 +65,36 @@ export default function CheckoutPage() {
   };
 
   // Fetch all products to resolve details
-useEffect(() => {
-  let isMounted = true;
+  useEffect(() => {
+    let isMounted = true;
 
-  const loadProducts = async () => {
-    try {
-      const response = await apiRequest("products?limit=100");
-      const data = response?.data ?? response ?? [];
+    const loadProducts = async () => {
+      try {
+        const response = await apiRequest("products?limit=100");
+        const data = response?.data ?? response ?? [];
 
-      if (isMounted) {
-        setProducts(Array.isArray(data) ? data : mockProducts || []);
+        if (isMounted) {
+          setProducts(Array.isArray(data) ? data : mockProducts || []);
+        }
+      } catch (err) {
+        console.error("Failed to load products:", err);
+
+        if (isMounted) {
+          setProducts(mockProducts || []);
+        }
+      } finally {
+        if (isMounted) {
+          setLoadingProducts(false);
+        }
       }
-    } catch (err) {
-      console.error("Failed to load products:", err);
+    };
 
-      if (isMounted) {
-        setProducts(mockProducts || []);
-      }
-    } finally {
-      if (isMounted) {
-        setLoadingProducts(false);
-      }
-    }
-  };
+    loadProducts();
 
-  loadProducts();
-
-  return () => {
-    isMounted = false;
-  };
-}, []);
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   // Map cart items to full details
   const cartWithDetails = items.map((cartItem) => {
@@ -140,8 +142,11 @@ useEffect(() => {
       });
 
       if (response?.data) {
-        toast.success("Your order has been successfully received.");
-        clearCart(); // Optional: clear the cart after success
+        router.push(response?.data?.url);
+        // toast.success("Your order has been successfully received.");
+        https: setTimeout(() => {
+          clearCart(); // Optional: clear the cart after success
+        }, 1500);
       } else {
         throw new Error(
           "Oops! Your order could not be received. Please try again.",
@@ -152,7 +157,9 @@ useEffect(() => {
         err?.message ||
         "Oops! Your order could not be received. Please try again.";
 
-      setSubmitError(errorMessage);
+      setSubmitError(
+        "Opps! We couldn’t process your order. Please ensure your information is correct and try again.",
+      );
       toast.error(errorMessage);
     } finally {
       setSubmitting(false);
@@ -198,7 +205,7 @@ useEffect(() => {
                     Your cart is empty.
                   </p>
                   <Button
-                    onClick={() => (window.location.href = "/")}
+                    onClick={() => router.push("/")}
                     className="bg-primary hover:bg-primary/90"
                   >
                     Browse Products

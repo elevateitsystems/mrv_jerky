@@ -1,8 +1,10 @@
+// order tab
 "use client";
 
 import { Button } from "@/components/ui/button";
 import { OrdersFilter } from "./OrdersFilter";
 import { useOrdersStore } from "@/lib/store/useOrdersStore";
+import { useEffect } from "react";
 
 const formatTotalAmount = (amount: string | number | undefined) => {
   const value = Number(amount ?? 0);
@@ -10,6 +12,8 @@ const formatTotalAmount = (amount: string | number | undefined) => {
 };
 
 export function OrdersTab() {
+
+
   const {
     orders,
     pagination,
@@ -23,12 +27,17 @@ export function OrdersTab() {
     error,
   } = useOrdersStore();
 
+    useEffect(() => {
+    fetchOrders();
+  }, []);
+
+  console.log({ orders });
   const isEmpty = !orders || orders.length === 0;
 
   return (
     <div className="space-y-6">
       {/* FILTERS */}
-      <OrdersFilter
+      {/* <OrdersFilter
         search={filters.search}
         status={filters.status}
         fromDate={filters.fromDate}
@@ -38,7 +47,7 @@ export function OrdersTab() {
         onFromDateChange={(v) => setFilters({ fromDate: v })}
         onToDateChange={(v) => setFilters({ toDate: v })}
         onReset={resetFilters}
-      />
+      /> */}
 
       {/* HEADER */}
       <div className="flex flex-col gap-4 md:flex-row md:justify-between md:items-center">
