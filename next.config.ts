@@ -1,4 +1,5 @@
-import type { NextConfig } from "next";
+const BACKEND_URL =
+  process.env.BACKEND_URL || "https://mrv-jerky-backend.onrender.com/api";
 
 const nextConfig = {
   images: {
@@ -7,26 +8,14 @@ const nextConfig = {
         protocol: "https",
         hostname: "**",
       },
-      {
-        protocol: "http",
-        hostname: "**",
-      },
     ],
   },
-  env: {
-    BACKEND_URL: process.env.BACKEND_URL || "https://mrv-jerky-backend.onrender.com/api",
-  },
-  typescript: {
-    ignoreBuildErrors: true,
-  },
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
+
   async rewrites() {
     return [
       {
-        source: '/api/:path*',
-        destination: `${process.env.BACKEND_URL || 'https://mrv-jerky-backend.onrender.com/api'}/:path*`,
+        source: "/api/:path*",
+        destination: `${BACKEND_URL}/:path*`,
       },
     ];
   },
