@@ -7,7 +7,7 @@ import Image from "next/image";
 const features = [
   "Handcrafted in Small Batches",
   "No Artificial Preservatives",
-  "Sourced from Local Farms",
+  "Made with 85/15 American Beef",
   "Marinated for 24 Hours",
   "Enjoy grilled, fried or straight from the pack.",
 ];

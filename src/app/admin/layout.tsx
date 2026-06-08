@@ -8,9 +8,11 @@ import {
   Loader2,
   LogOut,
   Settings,
+  ShoppingBag,
   Store,
   Users,
 } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
@@ -21,21 +23,23 @@ export default function AdminLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const { token, user, logout, checkAuth, isLoading } = useAuthStore();
+  const { user, logout, checkAuth, isLoading } = useAuthStore();
   const router = useRouter();
   const pathname = usePathname();
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     setMounted(true);
-    checkAuth();
-  }, [checkAuth]);
+    checkAuth()
+  }, []);
 
   useEffect(() => {
-    if (mounted && !isLoading && !token) {
+    if (!mounted) return;
+
+    if (!isLoading && !user) {
       router.push("/auth/login");
     }
-  }, [token, isLoading, mounted, router]);
+  }, [user, isLoading, mounted, router]);
 
   if (!mounted || isLoading) {
     return (
@@ -48,13 +52,13 @@ export default function AdminLayout({
     );
   }
 
-  if (!token) {
+  if (!user) {
     return null;
   }
 
   const navLinks = [
     { name: "Orders Table", href: "/admin/orders", icon: ClipboardList },
-    // { name: "Products", href: "/admin/products", icon: ShoppingBag },
+    { name: "Products", href: "/admin/products", icon: ShoppingBag },
     { name: "Store Locator", href: "/admin/stores", icon: Store },
     { name: "Users", href: "/admin/users", icon: Users },
     { name: "Profile Settings", href: "/admin/settings", icon: Settings },
@@ -65,12 +69,17 @@ export default function AdminLayout({
       {/* Sidebar */}
       <aside className="w-full md:w-64 bg-zinc-900 border-r border-white/5 flex flex-col">
         <div className="p-6 border-b border-white/5">
-          <Link href="/admin/orders">
-            <h1 className="font-heading text-lg font-black uppercase tracking-wider cursor-pointer">
-              Admin <span className="text-primary">Panel</span>
-            </h1>
+          <Link href="/" className="flex items-center gap-2 bg-wh">
+            <Image
+              src="/images/logo1.png"
+              alt="MRV Jerky Logo"
+              width={72}
+              height={52}
+              className="h-12 w-12 object-contain md:h-[3.5rem] md:w-[3.5rem] mx-auto"
+              priority
+            />
           </Link>
-          <p className="text-xs text-zinc-500 mt-1 uppercase font-bold tracking-widest">
+          <p className="text-xs text-zinc-500 mt-1 uppercase font-bold tracking-widest text-center">
             Welcome, {user?.firstName || "Admin"}
           </p>
         </div>

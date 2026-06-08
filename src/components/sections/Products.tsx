@@ -23,14 +23,15 @@ import {
 } from "@/components/ui/dialog";
 import ProductSkeleton from "../productSkeleton";
 
+// For Product reference
 export const mockProducts = [
   {
     id: "colorado-mock-id-1",
     name: "Colorado",
     price: 7.99,
     weight: "2 oz",
-    image: "/images/colorado.jpeg",
-    labelImages: [
+    images: [
+      "/images/colorado.jpeg",
       "/images/colorado.jpeg",
       "/images/packaging.jpg",
       "/images/pupup-image.jpg",
@@ -44,8 +45,8 @@ export const mockProducts = [
     name: "Southwest",
     price: 7.99,
     weight: "2 oz",
-    image: "/images/Southwest-1.webp",
-    // labelImage: "/images/Southwest-1.webp",
+    image: "",
+    images: ["/images/Southwest-1.webp"],
     description:
       "Smoky, slightly sweet, and finished with warm spices, Southwest delivers a bold flavor profile inspired by desert sunsets while providing 14g of protein in every serving.",
   },
@@ -54,21 +55,10 @@ export const mockProducts = [
     name: "Polish",
     price: 7.99,
     weight: "2 oz",
-    image: "/images/polish.png",
+    images: ["/images/polish.png"],
     // labelImage: "/images/polish.png",
     description:
       "Classic old-world flavor with a clean ingredient list. Crafted with beef, garlic, spices, and apple cider vinegar for a satisfying bite and an impressive 15g of protein.",
-  },
-  {
-    id: "teriyaki-mock-id-4",
-    name: "Teriyaki",
-    price: "COMING SOON",
-    weight: "2 oz",
-    image: "/images/Teriyaki.webp",
-
-    description:
-      "Our newest flavor is on the way. Stay tuned for a sweet and savory teriyaki experience crafted with the same premium quality you expect.",
-    comingSoon: true,
   },
 ];
 
@@ -83,16 +73,18 @@ export function Products() {
   useEffect(() => {
     async function loadProducts() {
       try {
-        const response = await apiRequest("products?limit=100");
+        const response = await apiRequest("products?limit=10");
         const data = response.data || response;
 
         if (Array.isArray(data) && data.length > 0) {
           setProducts(data);
         } else {
-          setProducts(mockProducts);
+          // setProducts(mockProducts);
+          setProducts([]);
         }
       } catch {
-        setProducts(mockProducts);
+        // setProducts(mockProducts);
+        setProducts([]);
       } finally {
         setLoading(false);
       }
@@ -102,7 +94,7 @@ export function Products() {
   }, []);
 
   const renderProducts = useMemo(
-    () => (products.length ? products : mockProducts),
+    () => (products.length ? products : []),
     [products],
   );
 
@@ -136,10 +128,7 @@ export function Products() {
           ) : (
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
               {renderProducts.map((product) => {
-                const displayImage =
-                  product.images?.[0]?.url ||
-                  product.image ||
-                  "/images/Colorado-1.webp";
+                const displayImage = product.images?.[0]?.url || "";
 
                 const isComingSoon =
                   product.comingSoon ||
@@ -222,6 +211,45 @@ export function Products() {
                   </Card>
                 );
               })}
+
+              {/* Comming soon card */}
+
+              <Card className="flex h-full flex-col overflow-hidden border border-white/10 bg-[#070609] transition-all text-white duration-300 hover:border-primary">
+                <CardHeader className="relative h-96 p-0">
+                  <div className="absolute right-4 top-4 z-10 rounded bg-yellow-500 px-3 py-1 text-xs font-bold text-black">
+                    COMING SOON
+                  </div>
+
+                  <Image
+                    src={"/images/placeholder.webp"}
+                    alt={"/comming soon product"}
+                    fill
+                    sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
+                    className="object-contain"
+                  />
+                </CardHeader>
+
+                <CardContent className="flex flex-1 flex-col p-6">
+                  <p className="mb-2 text-sm font-bold uppercase tracking-widest text-primary">
+                    {"2 oz"}
+                  </p>
+
+                  <h3 className="mb-2 text-2xl font-bold uppercase">
+                    Teriyaki
+                  </h3>
+
+                  <p className="mb-4 text-lg font-bold">COMING SOON</p>
+                </CardContent>
+
+                <CardFooter className="border-t-0 bg-[#070609] p-6 pt-0">
+                  <Button
+                    disabled
+                    className="w-full cursor-not-allowed opacity-60"
+                  >
+                    Coming Soon
+                  </Button>
+                </CardFooter>
+              </Card>
             </div>
           )}
         </div>
@@ -245,9 +273,7 @@ export function Products() {
               <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                 <div className="relative aspect-square w-full overflow-hidden rounded-lg border border-white/10">
                   <Image
-                    src={
-                      selectedProduct.images?.[0]?.url || selectedProduct.image
-                    }
+                    src={selectedProduct.images?.[0]?.url || ""}
                     alt={selectedProduct.name}
                     fill
                     sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
@@ -277,31 +303,32 @@ export function Products() {
               </div>
 
               {/* Nutrition / Ingredients Label */}
-              {selectedProduct.labelImages &&
-                selectedProduct.labelImages?.length && (
-                  <div className="mt-8">
-                    <h4 className="mb-4 text-xl font-semibold">
-                      Nutrition & Ingredients
-                    </h4>
+              {selectedProduct.images?.length > 1 && (
+                <div className="mt-8">
+                  <h4 className="mb-4 text-xl font-semibold">
+                    Nutrition & Ingredients
+                  </h4>
 
-                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                      {selectedProduct.labelImages?.map((image: string) => (
+                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                    {selectedProduct.images
+                      .slice(1)
+                      .map((image: { url: string }, index: number) => (
                         <div
-                          key={image}
+                          key={`${image.url}-${index}`}
                           className="relative aspect-[3/4] w-full overflow-hidden rounded-lg border border-white/10"
                         >
                           <Image
-                            src={image}
-                            alt={`${image} Label`}
+                            src={image.url}
+                            alt={`${selectedProduct.name} Label ${index + 1}`}
                             fill
                             sizes="100vw"
                             className="object-contain"
                           />
                         </div>
                       ))}
-                    </div>
                   </div>
-                )}
+                </div>
+              )}
             </>
           )}
         </DialogContent>

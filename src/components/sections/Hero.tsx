@@ -7,7 +7,7 @@ import Link from "next/link";
 
 export function Hero() {
   return (
-    <section className="relative min-h-[650px] h-[86vh] flex items-end overflow-hidden bg-black">
+    <section className="relative h-[clamp(650px,86vh,900px)] flex items-center overflow-hidden bg-black">
       <div className="absolute inset-0 z-0">
         <div
           className="absolute inset-0 bg-cover bg-center"
@@ -17,7 +17,7 @@ export function Hero() {
         <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black/55" />
       </div>
 
-      <div className="container relative z-10 mx-auto px-4 pb-8 md:px-6 md:pb-12 lg:pb-16">
+      <div className="container relative top-16 z-10 mx-auto px-4 pb-8 md:px-6 md:pb-12 lg:pb-16">
         <div className="flex max-w-5xl flex-col items-start gap-6 md:flex-row md:items-center md:gap-10">
           <div className="relative mx-auto top-4 sm:top-0 size-52 shrink-0 md:h-72 md:w-72 lg:h-80 lg:w-80">
             <Image
