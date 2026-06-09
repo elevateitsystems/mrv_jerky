@@ -72,16 +72,18 @@ export function Products() {
 
   useEffect(() => {
     async function loadProducts() {
+
       try {
         const response = await apiRequest("products?limit=10");
-        const data = response.data || response;
-
-        if (Array.isArray(data) && data.length > 0) {
-          setProducts(data);
-        } else {
-          // setProducts(mockProducts);
-          setProducts([]);
-        }
+        const data = Array.isArray(response?.data) ? response.data : [];
+        // const data = response.data || response;
+        setProducts(data);
+        // if (Array.isArray(data) && data.length > 0) {
+        //   setProducts(data);
+        // } else {
+        //   // setProducts(mockProducts);
+        //   setProducts([]);
+        // }
       } catch {
         // setProducts(mockProducts);
         setProducts([]);
@@ -97,6 +99,12 @@ export function Products() {
     () => (products.length ? products : []),
     [products],
   );
+
+  // console.log({ products });
+
+  // if(loading){
+  //   // return 
+  // }
 
   return (
     <>
@@ -128,16 +136,8 @@ export function Products() {
           ) : (
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
               {renderProducts.map((product) => {
-                const displayImage = product.images?.[0]?.url || "";
-
-                const isComingSoon =
-                  product.comingSoon ||
-                  String(product.price).toLowerCase().includes("coming");
-
-                const displayPrice =
-                  typeof product.price === "number"
-                    ? `$${product.price.toFixed(2)}`
-                    : product.price;
+                // const displayImage = product.images?.[0]?.url || "";
+                // console.log({ displayImage });
 
                 return (
                   <Card
@@ -151,14 +151,9 @@ export function Products() {
                         </div>
                       )}
 
-                      {isComingSoon && (
-                        <div className="absolute right-4 top-4 z-10 rounded bg-yellow-500 px-3 py-1 text-xs font-bold text-black">
-                          COMING SOON
-                        </div>
-                      )}
-
                       <Image
-                        src={displayImage}
+                        // src={product.images[0].url}
+                        src={product.images[0].url}
                         alt={product.name}
                         fill
                         sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
@@ -175,7 +170,9 @@ export function Products() {
                         {product.name}
                       </h3>
 
-                      <p className="mb-4 text-lg font-bold">{displayPrice}</p>
+                      <p className="mb-4 text-lg font-bold">
+                        {Number(product.price).toFixed(2)}
+                      </p>
 
                       <p className="line-clamp-3 text-sm leading-6 text-zinc-300">
                         {product.description}
@@ -191,22 +188,13 @@ export function Products() {
                     </CardContent>
 
                     <CardFooter className="border-t-0 bg-[#070609] p-6 pt-0">
-                      {isComingSoon ? (
-                        <Button
-                          disabled
-                          className="w-full cursor-not-allowed opacity-60"
-                        >
-                          Coming Soon
-                        </Button>
-                      ) : (
-                        <Button
-                          className="w-full"
-                          onClick={() => addItem(product.id)}
-                        >
-                          <ShoppingCart className="mr-2 h-4 w-4" />
-                          Add to Cart
-                        </Button>
-                      )}
+                      <Button
+                        className="w-full"
+                        onClick={() => addItem(product.id)}
+                      >
+                        <ShoppingCart className="mr-2 h-4 w-4" />
+                        Add to Cart
+                      </Button>
                     </CardFooter>
                   </Card>
                 );
