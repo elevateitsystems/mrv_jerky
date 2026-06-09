@@ -32,6 +32,7 @@ interface Product {
 export function ProductsTab() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
+  const [saveProductLoading, setSaveProductLoading] = useState(false);
   const [error, setError] = useState("");
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
 
@@ -59,7 +60,7 @@ export function ProductsTab() {
 
         const res = await apiRequest("/products");
         const productsData = Array.isArray(res?.data) ? res.data : [];
-        
+        // console.log({ productsData });
         setProducts(productsData);
       } catch (err: any) {
         setError("Failed to load products");
@@ -149,6 +150,7 @@ export function ProductsTab() {
 
   // ---------------- SAVE (POST / PUT) ----------------
   const handleSaveProduct = async (e: React.FormEvent) => {
+    setSaveProductLoading(true);
     e.preventDefault();
 
     const formData = new FormData();
@@ -218,6 +220,7 @@ export function ProductsTab() {
     } catch (err) {
       toast.error("Failed to save product");
     }
+    setSaveProductLoading(false);
   };
 
   // ---------------- DELETE ----------------
@@ -461,8 +464,8 @@ export function ProductsTab() {
                 Cancel
               </Button>
 
-              <Button type="submit" className="bg-primary text-white">
-                Save
+              <Button disabled={saveProductLoading?true:false} type="submit" className="bg-primary text-white">
+                {saveProductLoading?"Saving...":"Save"}
               </Button>
             </div>
           </form>
